@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { supabase, Player } from '@/lib/supabaseClient'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { SafeButton } from '@/components/SafeButton'
+import { AppButton } from '@/components/AppButton'
 
 export default function AdminPage() {
   const [isAdmin, setIsAdmin] = useState(false)
@@ -212,21 +212,21 @@ export default function AdminPage() {
                                 className="px-3 py-1 rounded border border-slate-500 bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-primary"
                                 autoFocus
                               />
-                              <SafeButton
+                              <AppButton
                                 onClick={() => saveCustomName(player.user_id)}
                                 disabled={isUpdating}
                                 size="sm"
                                 variant="success"
                               >
                                 Save
-                              </SafeButton>
-                              <SafeButton
+                              </AppButton>
+                              <AppButton
                                 onClick={cancelEditingName}
                                 size="sm"
                                 variant="secondary"
                               >
                                 Cancel
-                              </SafeButton>
+                              </AppButton>
                             </div>
                           ) : (
                             <div>
@@ -263,23 +263,23 @@ export default function AdminPage() {
 
                     {/* Bottom Row: Action Buttons */}
                     <div className="flex items-center gap-2">
-                      <SafeButton
+                      <AppButton
                         onClick={() => togglePlaysRematch(player.user_id, player.plays_rematch)}
                         disabled={isUpdating}
                         size="sm"
                         variant={player.plays_rematch ? "success" : "secondary"}
                       >
                         {isUpdating ? '...' : player.plays_rematch ? '✓ Plays Rematch' : '✕ View Only'}
-                      </SafeButton>
+                      </AppButton>
 
-                      <SafeButton
+                      <AppButton
                         onClick={() => toggleIsAdmin(player.user_id, player.is_admin)}
                         disabled={isUpdating}
                         size="sm"
                         variant={player.is_admin ? "warning" : "secondary"}
                       >
                         {isUpdating ? '...' : player.is_admin ? '👑 Admin' : 'Make Admin'}
-                      </SafeButton>
+                      </AppButton>
                     </div>
                   </div>
                 </div>

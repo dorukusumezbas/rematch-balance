@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase, Player } from '@/lib/supabaseClient'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { SafeButton } from '@/components/SafeButton'
+import { AppButton } from '@/components/AppButton'
 import { Badge } from '@/components/ui/badge'
 
 type PlayerWithScore = Player & {
@@ -207,9 +207,9 @@ export default function BalancePage() {
         <CardHeader>
           <CardTitle className="text-white flex items-center justify-between">
             <span>Select Online Players ({onlineCount} online)</span>
-            <SafeButton onClick={resetAll} variant="ghost" size="sm">
+            <AppButton onClick={resetAll} variant="ghost" size="sm">
               Reset All
-            </SafeButton>
+            </AppButton>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -264,22 +264,22 @@ export default function BalancePage() {
                       <Badge>{player.avg_score.toFixed(2)}</Badge>
                     </div>
                     <div className="flex gap-2">
-                      <SafeButton 
+                      <AppButton 
                         onClick={() => moveToTeam1(player)}
                         size="sm" 
                         className="flex-1"
                         variant="primary"
                       >
                         → Team 1
-                      </SafeButton>
-                      <SafeButton 
+                      </AppButton>
+                      <AppButton 
                         onClick={() => moveToTeam2(player)}
                         size="sm"
                         className="flex-1"
                         variant="warning"
                       >
                         → Team 2
-                      </SafeButton>
+                      </AppButton>
                     </div>
                   </div>
                 ))
@@ -317,13 +317,13 @@ export default function BalancePage() {
                           {player.avg_score.toFixed(2)}
                         </Badge>
                       </div>
-                      <SafeButton 
+                      <AppButton 
                         onClick={() => removeFromTeam1(player)}
                         variant="danger"
                         size="sm"
                       >
                         ✕
-                      </SafeButton>
+                      </AppButton>
                     </div>
                   </div>
                 ))
@@ -361,13 +361,13 @@ export default function BalancePage() {
                           {player.avg_score.toFixed(2)}
                         </Badge>
                       </div>
-                      <SafeButton 
+                      <AppButton 
                         onClick={() => removeFromTeam2(player)}
                         variant="danger"
                         size="sm"
                       >
                         ✕
-                      </SafeButton>
+                      </AppButton>
                     </div>
                   </div>
                 ))
@@ -396,15 +396,15 @@ export default function BalancePage() {
               </div>
             </div>
             <div className="flex gap-3">
-              <SafeButton 
+              <AppButton 
                 onClick={resetTeams}
                 disabled={team1.players.length === 0 && team2.players.length === 0}
                 size="lg"
                 variant="ghost"
               >
                 🔄 Reset Teams
-              </SafeButton>
-              <SafeButton 
+              </AppButton>
+              <AppButton 
                 onClick={balanceTeams}
                 disabled={availablePlayers.length === 0}
                 size="lg"
@@ -412,7 +412,7 @@ export default function BalancePage() {
                 className="font-bold"
               >
                 ⚖️ Balance Teams
-              </SafeButton>
+              </AppButton>
             </div>
           </div>
         </CardContent>

@@ -5,7 +5,7 @@ import { supabase, Player, Vote } from '@/lib/supabaseClient'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Slider } from '@/components/ui/slider'
 import { Badge } from '@/components/ui/badge'
-import { SafeButton } from '@/components/SafeButton'
+import { AppButton } from '@/components/AppButton'
 
 export default function RatePage() {
   const [players, setPlayers] = useState<Player[]>([])
@@ -135,12 +135,12 @@ export default function RatePage() {
         <div className="flex justify-between items-center mb-2">
           <h1 className="text-3xl font-bold text-white">Rate Players</h1>
           {unratedCount < players.length && (
-            <SafeButton
+            <AppButton
               onClick={() => setHideRated(!hideRated)}
               variant="secondary"
             >
               {hideRated ? 'Show All' : 'Hide Rated'}
-            </SafeButton>
+            </AppButton>
           )}
         </div>
         <div className="flex items-center gap-3">
@@ -233,7 +233,7 @@ export default function RatePage() {
 
                 {/* Save Button */}
                 {hasUnsavedChanges && (
-                  <SafeButton 
+                  <AppButton 
                     onClick={() => saveVote(player.user_id, currentScore!)}
                     disabled={isSaving}
                     fullWidth
@@ -241,7 +241,7 @@ export default function RatePage() {
                     variant="success"
                   >
                     {isSaving ? 'Saving...' : 'Save Vote'}
-                  </SafeButton>
+                  </AppButton>
                 )}
               </CardContent>
             </Card>
@@ -255,13 +255,13 @@ export default function RatePage() {
             <p className="text-xl text-white">
               🎉 You've rated all players! 
             </p>
-            <SafeButton 
+            <AppButton 
               onClick={() => setHideRated(false)} 
               className="mt-4"
               variant="primary"
             >
               Show All Players
-            </SafeButton>
+            </AppButton>
           </CardContent>
         </Card>
       )}

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { SafeButton } from '@/components/SafeButton'
+import { AppButton } from '@/components/AppButton'
 import Link from 'next/link'
 
 export default function Home() {
@@ -16,7 +16,7 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <Link href="/rate">
-            <SafeButton fullWidth variant="primary">Go to Rating</SafeButton>
+            <AppButton fullWidth variant="primary">Go to Rating</AppButton>
           </Link>
         </CardContent>
       </Card>
@@ -32,7 +32,7 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <Link href="/scoreboard">
-            <SafeButton fullWidth variant="primary">View Scoreboard</SafeButton>
+            <AppButton fullWidth variant="primary">View Scoreboard</AppButton>
           </Link>
         </CardContent>
       </Card>
@@ -48,7 +48,7 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <Link href="/balance">
-            <SafeButton fullWidth variant="primary">Balance Teams</SafeButton>
+            <AppButton fullWidth variant="primary">Balance Teams</AppButton>
           </Link>
         </CardContent>
       </Card>
@@ -64,7 +64,7 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <Link href="/votes">
-            <SafeButton fullWidth variant="primary">View Matrix</SafeButton>
+            <AppButton fullWidth variant="primary">View Matrix</AppButton>
           </Link>
         </CardContent>
       </Card>
@@ -80,7 +80,7 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <Link href="/profile">
-            <SafeButton fullWidth variant="primary">Edit Profile</SafeButton>
+            <AppButton fullWidth variant="primary">Edit Profile</AppButton>
           </Link>
         </CardContent>
       </Card>
