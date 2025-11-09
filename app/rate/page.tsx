@@ -178,10 +178,10 @@ export default function RatePage() {
                       <img 
                         src={avatarUrl} 
                         alt={displayName}
-                        className="w-12 h-12 rounded-full ring-2 ring-slate-700"
+                        className="w-12 h-12 rounded-full ring-2 ring-slate-700 mt-1"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-lg text-white ring-2 ring-slate-700">
+                      <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-lg text-white ring-2 ring-slate-700 mt-1">
                         {displayName[0].toUpperCase()}
                       </div>
                     )}
