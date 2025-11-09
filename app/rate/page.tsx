@@ -171,73 +171,86 @@ export default function RatePage() {
           return (
             <Card key={player.user_id} className={!savedScore ? 'border-destructive border-2 bg-destructive/10' : 'bg-slate-800/50 border-slate-700'}>
               <CardContent className="p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  {avatarUrl ? (
-                    <img 
-                      src={avatarUrl} 
-                      alt={displayName}
-                      className="w-10 h-10 rounded-full"
-                    />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-lg text-white">
-                      {displayName[0].toUpperCase()}
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-white">{displayName}</span>
-                      {!savedScore && (
-                        <Badge variant="destructive" className="text-xs animate-pulse">NOT RATED</Badge>
-                      )}
-                      {hasUnsavedChanges && !isSaving && (
-                        <Badge className="text-xs bg-yellow-600 text-white">Unsaved</Badge>
-                      )}
-                      {isSaving && (
-                        <Badge variant="secondary" className="text-xs">Saving...</Badge>
-                      )}
+                <div className="flex gap-4">
+                  {/* Left: Avatar and Name */}
+                  <div className="flex flex-col items-center gap-2 min-w-[80px]">
+                    {avatarUrl ? (
+                      <img 
+                        src={avatarUrl} 
+                        alt={displayName}
+                        className="w-14 h-14 rounded-full"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center text-xl text-white">
+                        {displayName[0].toUpperCase()}
+                      </div>
+                    )}
+                    <div className="text-center">
+                      <div className="font-semibold text-white text-sm">{displayName}</div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className={`text-2xl font-bold ${currentScore ? 'text-primary' : 'text-muted-foreground'}`}>
-                      {currentScore ? currentScore.toFixed(2) : '—'}
-                    </div>
-                  </div>
-                </div>
 
-                <div className="h-5 mb-2 flex items-center justify-center">
-                  {!savedScore && !pendingScore && (
-                    <div className="text-center text-xs text-destructive font-medium">
-                      ⚠️ Drag the slider to rate this player
+                  {/* Right: Rating Controls */}
+                  <div className="flex-1 flex flex-col justify-between">
+                    {/* Score and Badges */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {!savedScore && (
+                          <Badge variant="destructive" className="text-xs animate-pulse">NOT RATED</Badge>
+                        )}
+                        {hasUnsavedChanges && !isSaving && (
+                          <Badge className="text-xs bg-yellow-600 text-white">Unsaved</Badge>
+                        )}
+                        {isSaving && (
+                          <Badge variant="secondary" className="text-xs">Saving...</Badge>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        <div className={`text-2xl font-bold ${currentScore ? 'text-primary' : 'text-muted-foreground'}`}>
+                          {currentScore ? currentScore.toFixed(2) : '—'}
+                        </div>
+                      </div>
                     </div>
-                  )}
-                </div>
-                
-                <div className={`space-y-1 ${!savedScore && !pendingScore ? 'opacity-50' : ''}`}>
-                  <Slider
-                    min={1}
-                    max={10}
-                    step={0.25}
-                    value={currentScore || 5.5}
-                    onValueChange={(value) => handleVoteChange(player.user_id, value)}
-                    disabled={isSaving}
-                  />
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>1.0</span>
-                    <span>5.5</span>
-                    <span>10.0</span>
+
+                    {/* Warning */}
+                    <div className="h-5 mb-2 flex items-center justify-center">
+                      {!savedScore && !pendingScore && (
+                        <div className="text-center text-xs text-destructive font-medium">
+                          ⚠️ Drag the slider to rate this player
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Slider */}
+                    <div className={`space-y-1 ${!savedScore && !pendingScore ? 'opacity-50' : ''}`}>
+                      <Slider
+                        min={1}
+                        max={10}
+                        step={0.25}
+                        value={currentScore || 5.5}
+                        onValueChange={(value) => handleVoteChange(player.user_id, value)}
+                        disabled={isSaving}
+                      />
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>1.0</span>
+                        <span>5.5</span>
+                        <span>10.0</span>
+                      </div>
+                    </div>
+
+                    {/* Save Button */}
+                    {hasUnsavedChanges && (
+                      <Button 
+                        onClick={() => saveVote(player.user_id, currentScore!)}
+                        disabled={isSaving}
+                        className="w-full mt-2"
+                        size="sm"
+                      >
+                        {isSaving ? 'Saving...' : 'Save Vote'}
+                      </Button>
+                    )}
                   </div>
                 </div>
-
-                {hasUnsavedChanges && (
-                  <Button 
-                    onClick={() => saveVote(player.user_id, currentScore!)}
-                    disabled={isSaving}
-                    className="w-full mt-2"
-                    size="sm"
-                  >
-                    {isSaving ? 'Saving...' : 'Save Vote'}
-                  </Button>
-                )}
               </CardContent>
             </Card>
           )
