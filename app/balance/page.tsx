@@ -209,22 +209,28 @@ export default function BalancePage() {
   }
 
   // Drag and drop handlers
-  const handleDragStart = (player: PlayerWithScore, source: 'available' | 'team1' | 'team2') => {
+  const handleDragStart = (e: React.DragEvent, player: PlayerWithScore, source: 'available' | 'team1' | 'team2') => {
+    e.stopPropagation()
     setDraggedPlayer(player)
     setDragSource(source)
+    // Set drag effect
+    e.dataTransfer.effectAllowed = 'move'
   }
 
-  const handleDragEnd = () => {
+  const handleDragEnd = (e: React.DragEvent) => {
+    e.stopPropagation()
     setDraggedPlayer(null)
     setDragSource(null)
   }
 
   const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault() // Allow drop
+    e.preventDefault()
+    e.stopPropagation()
   }
 
   const handleDropToAvailable = (e: React.DragEvent) => {
     e.preventDefault()
+    e.stopPropagation()
     if (!draggedPlayer || dragSource === 'available') return
 
     if (dragSource === 'team1') {
@@ -238,6 +244,7 @@ export default function BalancePage() {
 
   const handleDropToTeam1 = (e: React.DragEvent) => {
     e.preventDefault()
+    e.stopPropagation()
     if (!draggedPlayer || dragSource === 'team1') return
 
     if (dragSource === 'available') {
@@ -252,6 +259,7 @@ export default function BalancePage() {
 
   const handleDropToTeam2 = (e: React.DragEvent) => {
     e.preventDefault()
+    e.stopPropagation()
     if (!draggedPlayer || dragSource === 'team2') return
 
     if (dragSource === 'available') {
@@ -340,9 +348,9 @@ export default function BalancePage() {
                   <div
                     key={player.user_id}
                     draggable
-                    onDragStart={() => handleDragStart(player, 'available')}
+                    onDragStart={(e) => handleDragStart(e, player, 'available')}
                     onDragEnd={handleDragEnd}
-                    className="p-3 bg-slate-700 rounded-lg border border-slate-600 cursor-move hover:bg-slate-600 transition-colors"
+                    className="p-3 bg-slate-700 rounded-lg border border-slate-600 cursor-move hover:bg-slate-600 transition-colors select-none"
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-white font-medium">
@@ -398,9 +406,9 @@ export default function BalancePage() {
                   <div
                     key={player.user_id}
                     draggable
-                    onDragStart={() => handleDragStart(player, 'team1')}
+                    onDragStart={(e) => handleDragStart(e, player, 'team1')}
                     onDragEnd={handleDragEnd}
-                    className="p-3 bg-blue-800/30 rounded-lg border border-blue-500/50 cursor-move hover:bg-blue-800/50 transition-colors"
+                    className="p-3 bg-blue-800/30 rounded-lg border border-blue-500/50 cursor-move hover:bg-blue-800/50 transition-colors select-none"
                   >
                     <div className="flex items-center justify-between">
                       <div>
@@ -449,9 +457,9 @@ export default function BalancePage() {
                   <div
                     key={player.user_id}
                     draggable
-                    onDragStart={() => handleDragStart(player, 'team2')}
+                    onDragStart={(e) => handleDragStart(e, player, 'team2')}
                     onDragEnd={handleDragEnd}
-                    className="p-3 bg-orange-800/30 rounded-lg border border-orange-500/50 cursor-move hover:bg-orange-800/50 transition-colors"
+                    className="p-3 bg-orange-800/30 rounded-lg border border-orange-500/50 cursor-move hover:bg-orange-800/50 transition-colors select-none"
                   >
                     <div className="flex items-center justify-between">
                       <div>
