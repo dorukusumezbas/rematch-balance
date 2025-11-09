@@ -169,7 +169,6 @@ export default function TimelinePage() {
 
     // Calculate timeline data with history
     const timeline = calculateTimeline(voteHistory, playerIds, currentVotes || [])
-    console.log('Timeline data:', timeline)
     setTimelineData(timeline)
 
     // Calculate stats for each player
