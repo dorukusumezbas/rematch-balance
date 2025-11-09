@@ -119,7 +119,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                   Rate Players
                 </Link>
                 <Link href="/balance" className={`transition-colors ${pathname === '/balance' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
-                  Balance Teams
+                  Team Balancer
                 </Link>
                 
                 {/* Data Group */}

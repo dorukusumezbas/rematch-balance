@@ -25,7 +25,7 @@ export default function Home() {
                 <p className="mt-1">Check the scoreboard to see average ratings and player rankings</p>
               </div>
               <div>
-                <span className="font-semibold text-green-300">3. Balance Teams</span>
+                <span className="font-semibold text-green-300">3. Team Balancer</span>
                 <p className="mt-1">Use the team balancer to create fair and competitive matches</p>
               </div>
             </div>
@@ -79,7 +79,7 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <Link href="/balance">
-              <AppButton fullWidth variant="primary">Balance Teams</AppButton>
+              <AppButton fullWidth variant="primary">Team Balancer</AppButton>
             </Link>
           </CardContent>
         </Card>
