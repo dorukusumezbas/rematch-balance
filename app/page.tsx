@@ -55,7 +55,7 @@ export default function Home() {
         <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-all">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
-              🏆 Scoreboard
+              🏆 Leaderboard
             </CardTitle>
             <CardDescription className="text-slate-400">
               View average ratings and see who's on top
@@ -63,7 +63,7 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <Link href="/scoreboard">
-              <AppButton fullWidth variant="primary">View Scoreboard</AppButton>
+              <AppButton fullWidth variant="primary">View Leaderboard</AppButton>
             </Link>
           </CardContent>
         </Card>

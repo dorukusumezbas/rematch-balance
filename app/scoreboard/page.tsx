@@ -68,7 +68,7 @@ export default function ScoreboardPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-2">🏆 Scoreboard</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">🏆 Leaderboard</h1>
         <p className="text-white/70">
           Player rankings based on community ratings
         </p>

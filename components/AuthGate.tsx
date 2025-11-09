@@ -128,7 +128,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 {/* Data Group */}
                 <div className="h-4 w-px bg-white/20"></div>
                 <Link href="/scoreboard" className={`transition-colors ${pathname === '/scoreboard' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
-                  Scoreboard
+                  Leaderboard
                 </Link>
                 <Link href="/votes" className={`transition-colors ${pathname === '/votes' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
                   Vote Matrix
