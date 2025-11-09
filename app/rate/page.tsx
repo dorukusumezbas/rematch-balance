@@ -170,7 +170,7 @@ export default function RatePage() {
           const displayName = player.custom_name || player.display_name || 'Unknown Player'
           
           return (
-            <Card key={player.user_id} className={!savedScore ? 'border-destructive/50' : ''}>
+            <Card key={player.user_id} className={!savedScore ? 'border-destructive border-2 bg-destructive/5' : ''}>
               <CardHeader>
                 <div className="flex items-center gap-4">
                   {avatarUrl ? (
@@ -188,7 +188,7 @@ export default function RatePage() {
                     <CardTitle className="flex items-center gap-2">
                       {displayName}
                       {!savedScore && (
-                        <Badge variant="destructive" className="text-xs">Please Rate</Badge>
+                        <Badge variant="destructive" className="text-xs animate-pulse">NOT RATED YET</Badge>
                       )}
                       {hasUnsavedChanges && !isSaving && (
                         <Badge variant="default" className="text-xs bg-yellow-600">Unsaved</Badge>
@@ -199,8 +199,8 @@ export default function RatePage() {
                     </CardTitle>
                   </div>
                   <div className="text-right">
-                    <div className="text-3xl font-bold text-primary">
-                      {currentScore ? currentScore.toFixed(2) : '-'}
+                    <div className={`text-3xl font-bold ${currentScore ? 'text-primary' : 'text-muted-foreground'}`}>
+                      {currentScore ? currentScore.toFixed(2) : '—'}
                     </div>
                     <div className="text-xs text-muted-foreground">/ 10.00</div>
                   </div>
@@ -208,17 +208,24 @@ export default function RatePage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <Slider
-                    min={1}
-                    max={10}
-                    step={0.25}
-                    value={currentScore || 5}
-                    onValueChange={(value) => handleVoteChange(player.user_id, value)}
-                    disabled={isSaving}
-                  />
+                  {!savedScore && !pendingScore && (
+                    <div className="text-center text-sm text-destructive font-medium mb-2">
+                      ⚠️ Drag the slider below to rate this player
+                    </div>
+                  )}
+                  <div className={!savedScore && !pendingScore ? 'opacity-50' : ''}>
+                    <Slider
+                      min={1}
+                      max={10}
+                      step={0.25}
+                      value={currentScore || 5.5}
+                      onValueChange={(value) => handleVoteChange(player.user_id, value)}
+                      disabled={isSaving}
+                    />
+                  </div>
                   <div className="flex justify-between text-xs text-muted-foreground">
                     <span>1.0 - Beginner</span>
-                    <span>5.0 - Average</span>
+                    <span>5.5 - Average</span>
                     <span>10.0 - Pro</span>
                   </div>
                   {hasUnsavedChanges && (
