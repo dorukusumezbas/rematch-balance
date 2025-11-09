@@ -62,11 +62,11 @@ export default function BalancePage() {
     const enrichedPlayers: PlayerWithScore[] = (ratingsData || []).map(r => ({
       ...playersMap.get(r.player_id)!,
       avg_score: typeof r.avg_score === 'number' ? r.avg_score : parseFloat(String(r.avg_score)),
-      is_online: false
+      is_online: true // Start all players as online
     }))
 
     setAllPlayers(enrichedPlayers)
-    setAvailablePlayers(enrichedPlayers)
+    // Don't set availablePlayers here - let useEffect handle it
     setLoading(false)
   }
 
