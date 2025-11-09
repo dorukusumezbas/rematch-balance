@@ -35,7 +35,7 @@ export default function HistoryPage() {
     }
 
     // Get unique target IDs
-    const targetIds = [...new Set(historyData?.map(h => h.target_id) || [])]
+    const targetIds = Array.from(new Set(historyData?.map(h => h.target_id) || []))
 
     // Fetch player names for all targets
     const { data: playersData } = await supabase
