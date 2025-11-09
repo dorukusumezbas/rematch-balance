@@ -131,7 +131,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                   Scoreboard
                 </Link>
                 <Link href="/votes" className={`transition-colors ${pathname === '/votes' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
-                  All Votes
+                  Vote Matrix
                 </Link>
                 <Link href="/history" className={`transition-colors ${pathname === '/history' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
                   History
