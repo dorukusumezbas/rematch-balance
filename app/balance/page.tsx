@@ -358,12 +358,11 @@ export default function BalancePage() {
               Available Players ({availablePlayers.length})
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div 
-              className="space-y-2 min-h-[200px]"
-              onDragOver={handleDragOver}
-              onDrop={handleDropToAvailable}
-            >
+          <CardContent 
+            onDragOver={handleDragOver}
+            onDrop={handleDropToAvailable}
+          >
+            <div className="space-y-2 min-h-[200px]">
               {availablePlayers.length === 0 ? (
                 <p className="text-slate-400 text-center py-8">No players available</p>
               ) : (
@@ -424,12 +423,11 @@ export default function BalancePage() {
               </Badge>
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div 
-              className="space-y-2 min-h-[200px]"
-              onDragOver={handleDragOver}
-              onDrop={handleDropToTeam1}
-            >
+          <CardContent 
+            onDragOver={handleDragOver}
+            onDrop={handleDropToTeam1}
+          >
+            <div className="space-y-2 min-h-[200px]">
               {team1.players.length === 0 ? (
                 <p className="text-slate-400 text-center py-8">Drop players here</p>
               ) : (
@@ -483,12 +481,11 @@ export default function BalancePage() {
               </Badge>
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div 
-              className="space-y-2 min-h-[200px]"
-              onDragOver={handleDragOver}
-              onDrop={handleDropToTeam2}
-            >
+          <CardContent 
+            onDragOver={handleDragOver}
+            onDrop={handleDropToTeam2}
+          >
+            <div className="space-y-2 min-h-[200px]">
               {team2.players.length === 0 ? (
                 <p className="text-slate-400 text-center py-8">Drop players here</p>
               ) : (
