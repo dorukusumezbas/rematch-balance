@@ -5,15 +5,42 @@
 -- Run this in Supabase SQL Editor
 -- ============================================
 
--- NOTE: This temporarily disables foreign key constraint
+-- NOTE: This creates fake auth.users records
 -- Only use this in development/testing!
+-- These users won't be able to sign in (no OAuth data)
 
--- 1. TEMPORARILY DISABLE FOREIGN KEY CONSTRAINT
-alter table public.players drop constraint if exists players_user_id_fkey;
+-- 1. CREATE TEST AUTH USERS
+-- Insert into auth.users table (Supabase manages this)
+insert into auth.users (
+  id,
+  instance_id,
+  aud,
+  role,
+  email,
+  encrypted_password,
+  email_confirmed_at,
+  created_at,
+  updated_at,
+  raw_app_meta_data,
+  raw_user_meta_data,
+  is_super_admin,
+  confirmation_token,
+  email_change,
+  email_change_token_new,
+  recovery_token
+) values
+  ('11111111-1111-1111-1111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'alice@test.local', '', now(), now(), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Alice"}', false, '', '', '', ''),
+  ('22222222-2222-2222-2222-222222222222', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bob@test.local', '', now(), now(), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Bob"}', false, '', '', '', ''),
+  ('33333333-3333-3333-3333-333333333333', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'charlie@test.local', '', now(), now(), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Charlie"}', false, '', '', '', ''),
+  ('44444444-4444-4444-4444-444444444444', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'diana@test.local', '', now(), now(), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Diana"}', false, '', '', '', ''),
+  ('55555555-5555-5555-5555-555555555555', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'eve@test.local', '', now(), now(), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Eve"}', false, '', '', '', ''),
+  ('66666666-6666-6666-6666-666666666666', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'frank@test.local', '', now(), now(), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Frank"}', false, '', '', '', ''),
+  ('77777777-7777-7777-7777-777777777777', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'grace@test.local', '', now(), now(), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Grace"}', false, '', '', '', ''),
+  ('88888888-8888-8888-8888-888888888888', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'henry@test.local', '', now(), now(), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Henry"}', false, '', '', '', '')
+on conflict (id) do nothing;
 
 -- 2. CREATE TEST PLAYERS
--- These won't be able to sign in (no auth.users record)
--- But they'll show up in the app for testing
+-- Now that auth.users exist, we can create players
 insert into public.players (user_id, discord_id, display_name, custom_name, avatar_url) values
   ('11111111-1111-1111-1111-111111111111', 'test001', 'Alice', 'Pro Alice', null),
   ('22222222-2222-2222-2222-222222222222', 'test002', 'Bob', null, null),
@@ -25,12 +52,7 @@ insert into public.players (user_id, discord_id, display_name, custom_name, avat
   ('88888888-8888-8888-8888-888888888888', 'test008', 'Henry', null, null)
 on conflict (user_id) do nothing;
 
--- 3. RE-ENABLE FOREIGN KEY CONSTRAINT
-alter table public.players 
-add constraint players_user_id_fkey 
-foreign key (user_id) references auth.users(id) on delete cascade;
-
--- 4. CREATE SOME TEST VOTES
+-- 3. CREATE SOME TEST VOTES
 -- Each player votes for a few others (realistic scenario)
 insert into public.votes (voter_id, target_id, score) values
   -- Alice's votes
