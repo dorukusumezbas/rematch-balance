@@ -38,6 +38,14 @@ export default function BalancePage() {
     )
   }, [allPlayers, team1.players, team2.players])
 
+  // Save online players to session storage whenever allPlayers changes
+  useEffect(() => {
+    if (allPlayers.length > 0) {
+      const onlinePlayerIds = allPlayers.filter(p => p.is_online).map(p => p.user_id)
+      sessionStorage.setItem('balancer-online-players', JSON.stringify(onlinePlayerIds))
+    }
+  }, [allPlayers])
+
   const loadPlayers = async () => {
     // Get all players with their ratings (only rematch players)
     const { data: ratingsData, error } = await supabase
@@ -59,10 +67,24 @@ export default function BalancePage() {
 
     const playersMap = new Map(playersData?.map(p => [p.user_id, p]) || [])
 
+    // Check session storage for previously selected online players
+    let savedOnlinePlayerIds: string[] = []
+    try {
+      const saved = sessionStorage.getItem('balancer-online-players')
+      if (saved) {
+        savedOnlinePlayerIds = JSON.parse(saved)
+      }
+    } catch (e) {
+      console.error('Error loading online players from session storage:', e)
+    }
+
     const enrichedPlayers: PlayerWithScore[] = (ratingsData || []).map(r => ({
       ...playersMap.get(r.player_id)!,
       avg_score: typeof r.avg_score === 'number' ? r.avg_score : parseFloat(String(r.avg_score)),
-      is_online: true // Start all players as online
+      // If we have saved data, use it; otherwise start all players as online
+      is_online: savedOnlinePlayerIds.length > 0 
+        ? savedOnlinePlayerIds.includes(r.player_id)
+        : true
     }))
 
     setAllPlayers(enrichedPlayers)
