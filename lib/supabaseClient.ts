@@ -11,6 +11,8 @@ export type Player = {
   custom_name: string | null; // User-set custom display name (optional)
   avatar_url: string | null; // Discord avatar URL
   joined_at: string; // Account creation timestamp
+  plays_rematch: boolean; // Whether player actively plays rematch games
+  is_admin: boolean; // Admin flag for managing other players
 };
 
 /**
