@@ -161,12 +161,12 @@ export default function VotesPage() {
                     return (
                     <tr key={voter.user_id} className="hover:bg-slate-700/30">
                       <td className="sticky left-0 bg-slate-800 z-10 p-3 border border-slate-600">
-                        <div className="flex items-center justify-between gap-3" title={`${getDisplayName(voter)} - Generosity: ${generosityScore.toFixed(2)} (average score they give to others)`}>
+                        <div className="flex items-center justify-between gap-3" title={`${getDisplayName(voter)}\nGenerosity Score: ${generosityScore.toFixed(2)}\n(Average score they give to others)`}>
                           <span className="font-semibold text-white truncate">
                             {getDisplayName(voter)}
                           </span>
                           <span className={`text-xs font-bold whitespace-nowrap ${getAvgScoreColor(generosityScore)}`}>
-                            G: {generosityScore.toFixed(2)}
+                            Generosity: {generosityScore.toFixed(2)}
                           </span>
                         </div>
                       </td>
@@ -198,31 +198,26 @@ export default function VotesPage() {
               </table>
             </div>
             
-            <div className="mt-4 space-y-3">
-              <div className="flex gap-4 text-xs text-slate-300">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded bg-green-600"></div>
-                  <span>8-10 (Pro)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded bg-blue-600"></div>
-                  <span>6-7 (Good)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded bg-yellow-600"></div>
-                  <span>4-5 (Average)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded bg-orange-600"></div>
-                  <span>1-3 (Beginner)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded bg-slate-700"></div>
-                  <span>? (Not voted)</span>
-                </div>
+            <div className="mt-4 flex gap-4 text-xs text-slate-300">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded bg-green-600"></div>
+                <span>8-10 (Pro)</span>
               </div>
-              <div className="text-xs text-slate-400 bg-slate-900/30 p-2 rounded">
-                <strong className="text-slate-300">G:</strong> Generosity Score - The average score this player gives to others (hover over row names to see details)
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded bg-blue-600"></div>
+                <span>6-7 (Good)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded bg-yellow-600"></div>
+                <span>4-5 (Average)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded bg-orange-600"></div>
+                <span>1-3 (Beginner)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded bg-slate-700"></div>
+                <span>? (Not voted)</span>
               </div>
             </div>
           </CardContent>
