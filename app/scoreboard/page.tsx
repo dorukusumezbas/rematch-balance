@@ -78,7 +78,7 @@ export default function ScoreboardPage() {
             >
               <CardContent className="py-4">
                 <div className="flex items-center gap-4">
-                  <div className="text-2xl font-bold w-12 text-center text-white">
+                  <div className={`font-bold w-12 text-center text-white ${index < 3 ? 'text-5xl' : 'text-3xl'}`}>
                     {getRankEmoji(index)}
                   </div>
                   
