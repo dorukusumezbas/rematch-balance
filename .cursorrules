@@ -1,0 +1,25 @@
+# Project Rules for Rematch Balancer
+
+## Database Migrations
+
+When creating database changes:
+1. Create new file in `supabase/migrations/` with format: `00X_description.sql`
+2. Use next available number (check README)
+3. Always use `IF EXISTS` / `IF NOT EXISTS` for idempotency
+4. Update the migrations/README.md table
+5. Test the migration before committing
+
+## Code Style
+
+- Use TypeScript strict mode
+- Prefer server components, use "use client" only when needed
+- Keep components small and focused
+- Use Tailwind for styling (no custom CSS unless needed)
+
+## Supabase Best Practices
+
+- Always use RLS policies
+- Use typed queries with TypeScript
+- Handle errors gracefully
+- Use `upsert` for create-or-update operations
+
