@@ -161,11 +161,11 @@ export default function VotesPage() {
                     return (
                     <tr key={voter.user_id} className="hover:bg-slate-700/30">
                       <td className="sticky left-0 bg-slate-800 z-10 p-3 border border-slate-600">
-                        <div className="flex items-center justify-between gap-3" title={`${getDisplayName(voter)}\nGenerosity Score: ${generosityScore.toFixed(2)}\n(Average score they give to others)`}>
+                        <div className="flex items-center justify-between gap-3" title={`${getDisplayName(voter)} - Generosity Score: ${generosityScore.toFixed(2)} (average score they give to others)`}>
                           <span className="font-semibold text-white truncate">
                             {getDisplayName(voter)}
                           </span>
-                          <span className={`text-xs font-bold whitespace-nowrap ${getAvgScoreColor(generosityScore)}`}>
+                          <span className="text-xs font-bold whitespace-nowrap text-slate-400">
                             Generosity: {generosityScore.toFixed(2)}
                           </span>
                         </div>
