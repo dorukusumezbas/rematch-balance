@@ -494,6 +494,10 @@ export default function TimelinePage() {
                     const data = payload[0].payload
                     const timestamp = data.timestamp
                     
+                    console.log('=== TOOLTIP DEBUG ===')
+                    console.log('Full data object:', data)
+                    console.log('Timestamp:', timestamp)
+                    
                     return (
                       <div style={{
                         backgroundColor: '#0f172a',
@@ -522,6 +526,8 @@ export default function TimelinePage() {
                           const displayName = player ? getDisplayName(player) : 'Unknown'
                           const value = data[playerId]
                           
+                          console.log(`Player: ${displayName}, ID: ${playerId}, Value from data: ${value}, Entry value: ${entry.value}`)
+                          
                           return (
                             <div key={index} style={{
                               padding: '4px 0',
@@ -530,6 +536,9 @@ export default function TimelinePage() {
                             }}>
                               <span style={{ fontWeight: 'bold' }}>{displayName}:</span>{' '}
                               <span>{typeof value === 'number' ? value.toFixed(2) : 'N/A'}</span>
+                              <span style={{ opacity: 0.6, marginLeft: '8px', fontSize: '11px' }}>
+                                (entry: {entry.value?.toFixed(2)})
+                              </span>
                             </div>
                           )
                         })}
