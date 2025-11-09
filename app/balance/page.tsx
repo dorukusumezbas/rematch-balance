@@ -352,17 +352,17 @@ export default function BalancePage() {
       {/* Teams and Available Pool */}
       <div className="grid md:grid-cols-3 gap-6 mb-6">
         {/* Available Players */}
-        <Card className="bg-slate-800/50 border-slate-700 flex flex-col">
+        <Card 
+          className="bg-slate-800/50 border-slate-700 flex flex-col"
+          onDragOver={handleDragOver}
+          onDrop={handleDropToAvailable}
+        >
           <CardHeader>
             <CardTitle className="text-white">
               Available Players ({availablePlayers.length})
             </CardTitle>
           </CardHeader>
-          <CardContent 
-            onDragOver={handleDragOver}
-            onDrop={handleDropToAvailable}
-            className="h-full"
-          >
+          <CardContent className="h-full">
             <div className="space-y-2 min-h-full">
               {availablePlayers.length === 0 ? (
                 <p className="text-slate-400 text-center py-8">No players available</p>
@@ -399,7 +399,11 @@ export default function BalancePage() {
         </Card>
 
         {/* Team 1 */}
-        <Card className="bg-slate-800/80 border-blue-500/50 flex flex-col">
+        <Card 
+          className="bg-slate-800/80 border-blue-500/50 flex flex-col"
+          onDragOver={handleDragOver}
+          onDrop={handleDropToTeam1}
+        >
           <CardHeader className="bg-blue-900/30">
             <CardTitle className="text-white flex items-center justify-between">
               <span>Team 1</span>
@@ -408,11 +412,7 @@ export default function BalancePage() {
               </Badge>
             </CardTitle>
           </CardHeader>
-          <CardContent 
-            onDragOver={handleDragOver}
-            onDrop={handleDropToTeam1}
-            className="h-full"
-          >
+          <CardContent className="h-full">
             <div className="space-y-2 min-h-full">
               {team1.players.length === 0 ? (
                 <p className="text-slate-400 text-center py-8">Drop players here</p>
@@ -460,7 +460,11 @@ export default function BalancePage() {
         </Card>
 
         {/* Team 2 */}
-        <Card className="bg-slate-800/80 border-orange-500/50 flex flex-col">
+        <Card 
+          className="bg-slate-800/80 border-orange-500/50 flex flex-col"
+          onDragOver={handleDragOver}
+          onDrop={handleDropToTeam2}
+        >
           <CardHeader className="bg-orange-900/30">
             <CardTitle className="text-white flex items-center justify-between">
               <span>Team 2</span>
@@ -469,11 +473,7 @@ export default function BalancePage() {
               </Badge>
             </CardTitle>
           </CardHeader>
-          <CardContent 
-            onDragOver={handleDragOver}
-            onDrop={handleDropToTeam2}
-            className="h-full"
-          >
+          <CardContent className="h-full">
             <div className="space-y-2 min-h-full">
               {team2.players.length === 0 ? (
                 <p className="text-slate-400 text-center py-8">Drop players here</p>
