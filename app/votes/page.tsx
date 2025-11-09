@@ -110,7 +110,7 @@ export default function VotesPage() {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-2">🗳️ All Votes Matrix</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">🗳️ Vote Matrix</h1>
         <p className="text-white/70">
           See who voted what for everyone - complete transparency
         </p>
