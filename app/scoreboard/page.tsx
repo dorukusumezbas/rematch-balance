@@ -78,7 +78,7 @@ export default function ScoreboardPage() {
             >
               <CardContent className="py-4">
                 <div className="flex items-center gap-4">
-                  <div className="text-2xl font-bold w-12 text-center">
+                  <div className="text-2xl font-bold w-12 text-center text-white">
                     {getRankEmoji(index)}
                   </div>
                   
@@ -89,13 +89,13 @@ export default function ScoreboardPage() {
                       className="w-12 h-12 rounded-full"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-xl">
+                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-xl text-white">
                       {(rating.display_name || '?')[0].toUpperCase()}
                     </div>
                   )}
 
                   <div className="flex-1">
-                    <div className="font-semibold text-lg">
+                    <div className="font-semibold text-lg text-white">
                       {rating.display_name || 'Unknown Player'}
                     </div>
                     <div className="text-sm text-muted-foreground">
