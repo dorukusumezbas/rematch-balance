@@ -505,24 +505,10 @@ export default function TimelinePage() {
                     padding: '4px 0',
                     fontSize: '13px'
                   }}
-                  formatter={(value: number, name: string, props: any) => {
+                  formatter={(value: number, name: string) => {
                     const player = players.find(p => p.user_id === name)
                     const displayName = player ? getDisplayName(player) : name
-                    
-                    // Find previous value to show change
-                    const currentIndex = timelineData.findIndex(d => d.timestamp === props.payload.timestamp)
-                    const prevPoint = currentIndex > 0 ? timelineData[currentIndex - 1] : null
-                    const prevValue = prevPoint ? prevPoint[name] as number : null
-                    
-                    const change = prevValue !== null && prevValue !== undefined 
-                      ? (value - prevValue).toFixed(2)
-                      : null
-                    
-                    const changeStr = change !== null
-                      ? ` (${parseFloat(change) >= 0 ? '+' : ''}${change})`
-                      : ''
-                    
-                    return [`${value.toFixed(2)}${changeStr}`, displayName]
+                    return [value.toFixed(2), displayName]
                   }}
                   labelFormatter={(label, payload) => {
                     if (payload && payload[0]) {
