@@ -488,41 +488,53 @@ export default function TimelinePage() {
                 />
                 <ReferenceLine y={5} stroke="#64748b" strokeDasharray="3 3" label={{ value: 'Mid (5.0)', fill: '#64748b', fontSize: 10 }} />
                 <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#0f172a', 
-                    border: '2px solid #475569',
-                    borderRadius: '12px',
-                    padding: '12px',
-                    color: '#fff',
-                    boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
-                  }}
-                  labelStyle={{ 
-                    color: '#e2e8f0', 
-                    fontWeight: 'bold',
-                    marginBottom: '8px',
-                    fontSize: '13px'
-                  }}
-                  itemStyle={{
-                    padding: '4px 0',
-                    fontSize: '13px'
-                  }}
-                  formatter={(value: number, name: string, props: any) => {
-                    console.log('Tooltip value:', value, 'name:', name, 'payload:', props.payload)
-                    const player = players.find(p => p.user_id === name)
-                    const displayName = player ? getDisplayName(player) : name
-                    return [value.toFixed(2), displayName]
-                  }}
-                  labelFormatter={(label, payload) => {
-                    if (payload && payload[0]) {
-                      const timestamp = payload[0].payload.timestamp
-                      return new Date(timestamp).toLocaleString('en-US', { 
-                        month: 'short', 
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })
-                    }
-                    return label
+                  content={({ active, payload, label }) => {
+                    if (!active || !payload || payload.length === 0) return null
+                    
+                    const data = payload[0].payload
+                    const timestamp = data.timestamp
+                    
+                    return (
+                      <div style={{
+                        backgroundColor: '#0f172a',
+                        border: '2px solid #475569',
+                        borderRadius: '12px',
+                        padding: '12px',
+                        color: '#fff',
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
+                      }}>
+                        <div style={{
+                          color: '#e2e8f0',
+                          fontWeight: 'bold',
+                          marginBottom: '8px',
+                          fontSize: '13px'
+                        }}>
+                          {new Date(timestamp).toLocaleString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </div>
+                        {payload.map((entry: any, index: number) => {
+                          const playerId = entry.dataKey
+                          const player = players.find(p => p.user_id === playerId)
+                          const displayName = player ? getDisplayName(player) : 'Unknown'
+                          const value = data[playerId]
+                          
+                          return (
+                            <div key={index} style={{
+                              padding: '4px 0',
+                              fontSize: '13px',
+                              color: entry.color
+                            }}>
+                              <span style={{ fontWeight: 'bold' }}>{displayName}:</span>{' '}
+                              <span>{typeof value === 'number' ? value.toFixed(2) : 'N/A'}</span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )
                   }}
                 />
                 <Legend 
