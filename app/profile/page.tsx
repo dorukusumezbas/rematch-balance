@@ -9,6 +9,7 @@ export default function ProfilePage() {
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [customName, setCustomName] = useState('')
   const [discordName, setDiscordName] = useState('')
+  const [playsRematch, setPlaysRematch] = useState(true)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
@@ -37,6 +38,7 @@ export default function ProfilePage() {
 
     setDiscordName(playerData.display_name || user.user_metadata.full_name || 'Unknown')
     setCustomName(playerData.custom_name || '')
+    setPlaysRematch(playerData.plays_rematch !== false) // Default to true if not set
     setLoading(false)
   }
 
@@ -48,7 +50,10 @@ export default function ProfilePage() {
 
     const { error } = await supabase
       .from('players')
-      .update({ custom_name: customName.trim() || null })
+      .update({ 
+        custom_name: customName.trim() || null,
+        plays_rematch: playsRematch
+      })
       .eq('user_id', currentUser.id)
 
     setSaving(false)
@@ -124,6 +129,36 @@ export default function ProfilePage() {
             {successMessage && (
               <p className="text-green-500 text-sm mt-2">{successMessage}</p>
             )}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6 bg-slate-800/50 border-slate-700">
+        <CardHeader>
+          <CardTitle>Rematch Player Status</CardTitle>
+          <CardDescription>
+            Toggle whether you actively play rematch games
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium text-white">I play rematch games</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {playsRematch ? 
+                  'You will appear in scoreboard, balancer, and voting pages' : 
+                  'You will be hidden from active player lists (view-only access)'}
+              </p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={playsRematch}
+                onChange={(e) => setPlaysRematch(e.target.checked)}
+                className="sr-only peer"
+              />
+              <div className="w-14 h-7 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+            </label>
           </div>
         </CardContent>
       </Card>

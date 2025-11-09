@@ -9,13 +9,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 export default function AuthGate({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session)
       if (session?.user) {
-        ensurePlayer(session.user.id, session.user.user_metadata)
+        await ensurePlayer(session.user.id, session.user.user_metadata)
+        // Check admin status
+        const { data } = await supabase
+          .from('players')
+          .select('is_admin')
+          .eq('user_id', session.user.id)
+          .single()
+        setIsAdmin(data?.is_admin || false)
       }
       setLoading(false)
     })
@@ -116,6 +124,11 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 <a href="/history" className="text-white/80 hover:text-white transition-colors">
                   History
                 </a>
+                {isAdmin && (
+                  <a href="/admin" className="text-yellow-400 hover:text-yellow-300 transition-colors font-semibold">
+                    Admin
+                  </a>
+                )}
               </div>
             </div>
             <div className="flex items-center gap-4">
