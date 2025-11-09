@@ -57,17 +57,22 @@ export default function BalancePage() {
   }
 
   const toggleOnline = (playerId: string) => {
-    setAllPlayers(prev => prev.map(p => 
-      p.user_id === playerId ? { ...p, is_online: !p.is_online } : p
-    ))
-    
-    // Update available players to only show online players
-    setAvailablePlayers(prev => prev.map(p => 
-      p.user_id === playerId ? { ...p, is_online: !p.is_online } : p
-    ).filter(p => p.is_online && 
-      !team1.players.find(t => t.user_id === p.user_id) && 
-      !team2.players.find(t => t.user_id === p.user_id)
-    ))
+    setAllPlayers(prev => {
+      const updated = prev.map(p => 
+        p.user_id === playerId ? { ...p, is_online: !p.is_online } : p
+      )
+      
+      // Update available players based on new allPlayers state
+      setAvailablePlayers(
+        updated.filter(p => 
+          p.is_online && 
+          !team1.players.find(t => t.user_id === p.user_id) && 
+          !team2.players.find(t => t.user_id === p.user_id)
+        )
+      )
+      
+      return updated
+    })
   }
 
   const moveToTeam1 = (player: PlayerWithScore) => {
