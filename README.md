@@ -2,6 +2,14 @@
 
 A community-driven player rating system for Discord groups. Rate your teammates, view the scoreboard, and prepare for balanced matches!
 
+## 📚 Documentation Quick Links
+
+- **[SETUP.md](./SETUP.md)** - Step-by-step setup guide for first-time setup
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System design and technical overview
+- **[DEVELOPMENT.md](./DEVELOPMENT.md)** - Development workflow and common tasks
+- **[.ai-context.md](./.ai-context.md)** - Quick reference for AI assistants
+- **[Migrations](./supabase/migrations/README.md)** - Database migration guide
+
 ## 🚀 Features (MVP)
 
 - **Discord Authentication**: Sign in with Discord OAuth

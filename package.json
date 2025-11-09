@@ -1,13 +1,18 @@
 {
-    "name": "rematch-balance",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "lint": "next lint"
-    },
+  "name": "rematch-balance",
+  "version": "0.1.0",
+  "description": "Player rating system for ASLI CIKMAZI Discord community",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dorukusumezbas/rematch-balance"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
     "dependencies": {
         "@supabase/supabase-js": "^2.39.0",
         "@supabase/auth-helpers-nextjs": "^0.8.7",
