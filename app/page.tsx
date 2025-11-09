@@ -37,6 +37,22 @@ export default function Home() {
         </CardContent>
       </Card>
 
+      <Card className="hover:shadow-lg transition-shadow md:col-span-2">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            ⚙️ Profile Settings
+          </CardTitle>
+          <CardDescription>
+            Customize your display name and preferences
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Link href="/profile">
+            <Button className="w-full" variant="outline">Edit Profile</Button>
+          </Link>
+        </CardContent>
+      </Card>
+
       <Card className="md:col-span-2 bg-primary/5 border-primary/20">
         <CardHeader>
           <CardTitle className="text-center">Welcome to ASLI CIKMAZI Rematch Balancer</CardTitle>

@@ -153,6 +153,8 @@ export default function RatePage() {
           const isPending = pendingVotes.has(player.user_id)
           const avatarUrl = getAvatarUrl(player)
 
+          const displayName = player.custom_name || player.display_name || 'Unknown Player'
+          
           return (
             <Card key={player.user_id} className={!currentScore ? 'border-destructive/50' : ''}>
               <CardHeader>
@@ -160,17 +162,17 @@ export default function RatePage() {
                   {avatarUrl ? (
                     <img 
                       src={avatarUrl} 
-                      alt={player.display_name || 'Player'}
+                      alt={displayName}
                       className="w-12 h-12 rounded-full"
                     />
                   ) : (
                     <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-xl">
-                      {(player.display_name || '?')[0].toUpperCase()}
+                      {displayName[0].toUpperCase()}
                     </div>
                   )}
                   <div className="flex-1">
                     <CardTitle className="flex items-center gap-2">
-                      {player.display_name || 'Unknown Player'}
+                      {displayName}
                       {!currentScore && (
                         <Badge variant="destructive" className="text-xs">Please Rate</Badge>
                       )}

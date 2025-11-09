@@ -4,6 +4,7 @@ export type Player = {
   user_id: string
   discord_id: string | null
   display_name: string | null
+  custom_name: string | null
   avatar_url: string | null
   joined_at: string
 }
