@@ -115,10 +115,6 @@ export default function TimelinePage() {
 
     // If no history, create a flat line showing current averages
     if (!voteHistory || voteHistory.length === 0) {
-      console.log('No history found, using current votes')
-      console.log('Current votes:', currentVotes)
-      console.log('Selected player IDs:', playerIds)
-      
       // Create two data points (start and end of range) with same values for flat line
       const startDate = getTimeRangeDate(timeRange)
       const endDate = new Date()
@@ -136,7 +132,6 @@ export default function TimelinePage() {
       let hasData = false
       playerIds.forEach(playerId => {
         const playerVotes = (currentVotes || []).filter((v: any) => v.target_id === playerId)
-        console.log(`Player ${playerId}: ${playerVotes.length} votes`)
         
         if (playerVotes.length > 0) {
           const avg = playerVotes.reduce((sum: number, v: any) => sum + v.score, 0) / playerVotes.length
@@ -148,12 +143,10 @@ export default function TimelinePage() {
       })
 
       if (hasData) {
-        console.log('Setting timeline data with current averages')
         setTimelineData([startPoint, endPoint])
         const stats = calculatePlayerStats([startPoint, endPoint], playerIds)
         setPlayerStats(stats)
       } else {
-        console.log('No data for selected players')
         setTimelineData([])
       }
       return
