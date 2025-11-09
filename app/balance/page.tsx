@@ -373,6 +373,8 @@ export default function BalancePage() {
                     onMouseDown={handleMouseDown}
                     onDragStart={(e) => handleDragStart(e, player, 'available')}
                     onDragEnd={handleDragEnd}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDropToAvailable}
                     className="p-3 bg-slate-700 rounded-lg border border-slate-600 cursor-move hover:bg-slate-600 transition-colors select-none"
                     style={{ userSelect: 'none', WebkitUserSelect: 'none' } as React.CSSProperties}
                   >
@@ -420,6 +422,8 @@ export default function BalancePage() {
                     onMouseDown={handleMouseDown}
                     onDragStart={(e) => handleDragStart(e, player, 'team1')}
                     onDragEnd={handleDragEnd}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDropToTeam1}
                     className="p-3 bg-blue-800/30 rounded-lg border border-blue-500/50 cursor-move hover:bg-blue-800/50 transition-colors select-none"
                     style={{ userSelect: 'none', WebkitUserSelect: 'none' } as React.CSSProperties}
                   >
@@ -478,6 +482,8 @@ export default function BalancePage() {
                     onMouseDown={handleMouseDown}
                     onDragStart={(e) => handleDragStart(e, player, 'team2')}
                     onDragEnd={handleDragEnd}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDropToTeam2}
                     className="p-3 bg-orange-800/30 rounded-lg border border-orange-500/50 cursor-move hover:bg-orange-800/50 transition-colors select-none"
                     style={{ userSelect: 'none', WebkitUserSelect: 'none' } as React.CSSProperties}
                   >
