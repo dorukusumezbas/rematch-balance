@@ -204,11 +204,13 @@ export default function RatePage() {
                   </div>
                 </div>
 
-                {!savedScore && !pendingScore && (
-                  <div className="text-center text-xs text-destructive font-medium mb-2">
-                    ⚠️ Drag the slider to rate this player
-                  </div>
-                )}
+                <div className="h-5 mb-2 flex items-center justify-center">
+                  {!savedScore && !pendingScore && (
+                    <div className="text-center text-xs text-destructive font-medium">
+                      ⚠️ Drag the slider to rate this player
+                    </div>
+                  )}
+                </div>
                 
                 <div className={`space-y-1 ${!savedScore && !pendingScore ? 'opacity-50' : ''}`}>
                   <Slider
