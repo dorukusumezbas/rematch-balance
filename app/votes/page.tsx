@@ -77,10 +77,11 @@ export default function VotesPage() {
 
   const getScoreColor = (score: number | null) => {
     if (!score) return 'bg-slate-700 text-slate-400 font-semibold'
-    if (score >= 8) return 'bg-green-600 text-white font-bold'
-    if (score >= 6) return 'bg-blue-600 text-white font-bold'
-    if (score >= 4) return 'bg-yellow-600 text-white font-bold'
-    return 'bg-orange-600 text-white font-bold'
+    if (score >= 8.5) return 'bg-green-600 text-white font-bold'
+    if (score >= 7) return 'bg-blue-600 text-white font-bold'
+    if (score >= 5) return 'bg-yellow-600 text-white font-bold'
+    if (score >= 2.5) return 'bg-orange-600 text-white font-bold'
+    return 'bg-red-700 text-white font-bold'
   }
 
   const getDisplayName = (player: PlayerWithAvg) => {
@@ -88,10 +89,11 @@ export default function VotesPage() {
   }
 
   const getAvgScoreColor = (avg: number) => {
-    if (avg >= 8) return 'text-green-400'
-    if (avg >= 6) return 'text-blue-400'
-    if (avg >= 4) return 'text-yellow-400'
-    return 'text-orange-400'
+    if (avg >= 8.5) return 'text-green-400'
+    if (avg >= 7) return 'text-blue-400'
+    if (avg >= 5) return 'text-yellow-400'
+    if (avg >= 2.5) return 'text-orange-400'
+    return 'text-red-400'
   }
 
   const getGenerosityScore = (voterId: string): number => {
@@ -210,22 +212,26 @@ export default function VotesPage() {
               </table>
             </div>
             
-            <div className="mt-4 flex gap-4 text-xs text-slate-300">
+            <div className="mt-4 flex flex-wrap gap-3 text-xs text-slate-300">
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded bg-green-600"></div>
-                <span>≥ 8.00 (Pro)</span>
+                <span>8.5-10 👑 Kral</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded bg-blue-600"></div>
-                <span>≥ 6.00 (Good)</span>
+                <span>7-8.5 🎖️ Vezir</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded bg-yellow-600"></div>
-                <span>≥ 4.00 (Average)</span>
+                <span>5-7 ⚔️ Komutan</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded bg-orange-600"></div>
-                <span>&lt; 4.00 (Beginner)</span>
+                <span>2.5-5 🛡️ Piyade</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded bg-red-700"></div>
+                <span>0-2.5 🪓 Oduncu</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded bg-slate-700"></div>
