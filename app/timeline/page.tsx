@@ -1,13 +1,13 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { supabase, Player, VoteHistory } from '@/lib/supabaseClient'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AppButton } from '@/components/AppButton'
 import { Badge } from '@/components/ui/badge'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts'
 
-type TimeRange = '1d' | '1w' | '1m' | '3m'
+type TimeRange = '1d' | '1w' | '1m' | '3m' | 'all'
 
 type TimelineDataPoint = {
   date: string
@@ -80,6 +80,8 @@ export default function TimelinePage() {
         return new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
       case '3m':
         return new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000)
+      case 'all':
+        return new Date(0) // Beginning of time
     }
   }
 
@@ -167,39 +169,16 @@ export default function TimelinePage() {
   }
 
   const calculateTimeline = (history: VoteHistory[], playerIds: string[], baselineVotes: any[]): TimelineDataPoint[] => {
-    if (history.length === 0) return []
-
-    // Find the earliest vote in history
     const sortedHistory = [...history].sort((a, b) => 
       new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
     )
-    const earliestVote = new Date(sortedHistory[0].created_at).getTime()
-    const endDate = Date.now()
-    
-    // Use the later of (earliest vote, selected time range start) as the actual start
-    // This prevents showing empty time before data exists
-    const requestedStartDate = getTimeRangeDate(timeRange).getTime()
-    const actualStartDate = Math.max(earliestVote, requestedStartDate)
-
-    // Determine bucket size based on SELECTED time range (for consistent granularity)
-    const getBucketSize = (): number => {
-      switch (timeRange) {
-        case '1d': return 2 * 60 * 60 * 1000 // 2 hours
-        case '1w': return 6 * 60 * 60 * 1000 // 6 hours
-        case '1m': return 24 * 60 * 60 * 1000 // 1 day
-        case '3m': return 3 * 24 * 60 * 60 * 1000 // 3 days
-        default: return 24 * 60 * 60 * 1000
-      }
-    }
-
-    const bucketSize = getBucketSize()
-    const startDate = actualStartDate
 
     // Track current state of all votes for each player
     const currentVotes = new Map<string, Map<string, number>>() // playerId -> (voterId -> score)
     playerIds.forEach(id => currentVotes.set(id, new Map()))
 
-    // Initialize with baseline votes
+    // Initialize with baseline votes and track when they were set
+    const initialAverages = new Map<string, number>()
     baselineVotes.forEach((vote: any) => {
       const playerVotes = currentVotes.get(vote.target_id)
       if (playerVotes) {
@@ -207,38 +186,72 @@ export default function TimelinePage() {
       }
     })
 
-    // Process vote history to update state
-    let historyIndex = 0
+    // Calculate initial averages
+    playerIds.forEach(playerId => {
+      const votes = currentVotes.get(playerId)!
+      if (votes.size > 0) {
+        const avg = Array.from(votes.values()).reduce((sum, score) => sum + score, 0) / votes.size
+        initialAverages.set(playerId, parseFloat(avg.toFixed(2)))
+      }
+    })
+
     const dataPoints: TimelineDataPoint[] = []
+    const endDate = Date.now()
+    const requestedStartDate = getTimeRangeDate(timeRange).getTime()
 
-    // Create buckets
-    for (let bucketStart = startDate; bucketStart <= endDate; bucketStart += bucketSize) {
-      const bucketEnd = Math.min(bucketStart + bucketSize, endDate)
-
-      // Apply all votes that happened in this bucket
-      while (historyIndex < sortedHistory.length) {
-        const vote = sortedHistory[historyIndex]
-        const voteTime = new Date(vote.created_at).getTime()
-        
-        if (voteTime <= bucketEnd) {
-          // Apply this vote
-          const playerVotes = currentVotes.get(vote.target_id)
-          if (playerVotes) {
-            playerVotes.set(vote.voter_id, vote.score)
-          }
-          historyIndex++
-        } else {
-          break
-        }
-      }
-
-      // Create data point at end of bucket with current state
+    // If no history, show current state as flat line
+    if (sortedHistory.length === 0) {
       const point: TimelineDataPoint = {
-        date: new Date(bucketEnd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        timestamp: bucketEnd
+        date: new Date(endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        timestamp: endDate
+      }
+      playerIds.forEach(playerId => {
+        const avg = initialAverages.get(playerId)
+        if (avg !== undefined) {
+          point[playerId] = avg
+        }
+      })
+      return [point]
+    }
+
+    // Add starting point (before first vote or at requested start date)
+    const firstVoteTime = new Date(sortedHistory[0].created_at).getTime()
+    const startTime = Math.max(requestedStartDate, firstVoteTime - 1000) // 1 second before first vote
+    
+    if (startTime >= requestedStartDate && startTime < firstVoteTime) {
+      const startPoint: TimelineDataPoint = {
+        date: new Date(startTime).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        timestamp: startTime
+      }
+      playerIds.forEach(playerId => {
+        const avg = initialAverages.get(playerId)
+        if (avg !== undefined) {
+          startPoint[playerId] = avg
+        }
+      })
+      dataPoints.push(startPoint)
+    }
+
+    // Process each vote change and create a data point ONLY when there's an actual change
+    sortedHistory.forEach((vote) => {
+      const voteTime = new Date(vote.created_at).getTime()
+      
+      // Skip if outside requested time range
+      if (voteTime < requestedStartDate) return
+
+      // Update the vote state
+      const playerVotes = currentVotes.get(vote.target_id)
+      if (playerVotes) {
+        playerVotes.set(vote.voter_id, vote.score)
       }
 
-      // Calculate averages at this point in time
+      // Create data point after this vote
+      const point: TimelineDataPoint = {
+        date: new Date(voteTime).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        timestamp: voteTime
+      }
+
+      // Calculate averages for all players at this point in time
       let hasData = false
       playerIds.forEach(playerId => {
         const votes = currentVotes.get(playerId)!
@@ -252,6 +265,34 @@ export default function TimelinePage() {
       if (hasData) {
         dataPoints.push(point)
       }
+    })
+
+    // Add end point (current state)
+    const endPoint: TimelineDataPoint = {
+      date: new Date(endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      timestamp: endDate
+    }
+    playerIds.forEach(playerId => {
+      const votes = currentVotes.get(playerId)!
+      if (votes.size > 0) {
+        const avg = Array.from(votes.values()).reduce((sum, score) => sum + score, 0) / votes.size
+        endPoint[playerId] = parseFloat(avg.toFixed(2))
+      }
+    })
+    dataPoints.push(endPoint)
+
+    // Limit to max 50 points for performance - sample evenly if needed
+    if (dataPoints.length > 50) {
+      const samplingRate = Math.ceil(dataPoints.length / 50)
+      const sampledPoints = []
+      for (let i = 0; i < dataPoints.length; i += samplingRate) {
+        sampledPoints.push(dataPoints[i])
+      }
+      // Always include the last point
+      if (sampledPoints[sampledPoints.length - 1] !== dataPoints[dataPoints.length - 1]) {
+        sampledPoints.push(dataPoints[dataPoints.length - 1])
+      }
+      return sampledPoints
     }
 
     return dataPoints
@@ -363,6 +404,13 @@ export default function TimelinePage() {
               >
                 Last 3 Months
               </AppButton>
+              <AppButton
+                onClick={() => setTimeRange('all')}
+                variant={timeRange === 'all' ? 'primary' : 'secondary'}
+                size="sm"
+              >
+                All Time
+              </AppButton>
             </div>
           </div>
         </CardContent>
@@ -419,25 +467,66 @@ export default function TimelinePage() {
                   dataKey="date" 
                   stroke="#9ca3af"
                   style={{ fontSize: '12px' }}
+                  angle={-45}
+                  textAnchor="end"
+                  height={80}
                 />
                 <YAxis 
                   domain={[0, 10]} 
                   stroke="#9ca3af"
                   style={{ fontSize: '12px' }}
+                  label={{ value: 'Score', angle: -90, position: 'insideLeft', style: { fill: '#9ca3af' } }}
                 />
+                <ReferenceLine y={5} stroke="#64748b" strokeDasharray="3 3" label={{ value: 'Mid (5.0)', fill: '#64748b', fontSize: 10 }} />
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: '#1e293b', 
-                    border: '1px solid #475569',
-                    borderRadius: '8px',
-                    color: '#fff'
+                    backgroundColor: '#0f172a', 
+                    border: '2px solid #475569',
+                    borderRadius: '12px',
+                    padding: '12px',
+                    color: '#fff',
+                    boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
                   }}
-                  formatter={(value: number) => value.toFixed(2)}
-                  labelFormatter={(label) => label}
-                  itemFormatter={(value: number, name: string) => {
+                  labelStyle={{ 
+                    color: '#e2e8f0', 
+                    fontWeight: 'bold',
+                    marginBottom: '8px',
+                    fontSize: '13px'
+                  }}
+                  itemStyle={{
+                    padding: '4px 0',
+                    fontSize: '13px'
+                  }}
+                  formatter={(value: number, name: string, props: any) => {
                     const player = players.find(p => p.user_id === name)
                     const displayName = player ? getDisplayName(player) : name
-                    return [value.toFixed(2), displayName]
+                    
+                    // Find previous value to show change
+                    const currentIndex = timelineData.findIndex(d => d.timestamp === props.payload.timestamp)
+                    const prevPoint = currentIndex > 0 ? timelineData[currentIndex - 1] : null
+                    const prevValue = prevPoint ? prevPoint[name] as number : null
+                    
+                    const change = prevValue !== null && prevValue !== undefined 
+                      ? (value - prevValue).toFixed(2)
+                      : null
+                    
+                    const changeStr = change !== null
+                      ? ` (${parseFloat(change) >= 0 ? '+' : ''}${change})`
+                      : ''
+                    
+                    return [`${value.toFixed(2)}${changeStr}`, displayName]
+                  }}
+                  labelFormatter={(label, payload) => {
+                    if (payload && payload[0]) {
+                      const timestamp = payload[0].payload.timestamp
+                      return new Date(timestamp).toLocaleString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })
+                    }
+                    return label
                   }}
                 />
                 <Legend 
@@ -453,10 +542,11 @@ export default function TimelinePage() {
                     type="monotone"
                     dataKey={playerId}
                     stroke={getPlayerColor(playerId)}
-                    strokeWidth={2.5}
-                    dot={{ r: 4 }}
-                    activeDot={{ r: 6 }}
+                    strokeWidth={3}
+                    dot={{ r: 5, strokeWidth: 2, fill: '#1e293b' }}
+                    activeDot={{ r: 7, strokeWidth: 2 }}
                     connectNulls
+                    animationDuration={800}
                   />
                 ))}
               </LineChart>
