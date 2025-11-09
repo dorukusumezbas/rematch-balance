@@ -109,7 +109,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 <img src="/logo.png" alt="ASLI CIKMAZI" className="h-8 w-auto" />
                 <span className="text-xl font-bold text-white">ASLI CIKMAZI</span>
               </Link>
-              <div className="hidden md:flex gap-4 items-center">
+              <div className="hidden md:flex gap-3 items-center text-sm whitespace-nowrap">
                 <Link href="/" className={`transition-colors ${pathname === '/' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
                   Home
                 </Link>
@@ -123,7 +123,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 {/* Tools Group */}
                 <div className="h-4 w-px bg-white/20"></div>
                 <Link href="/balance" className={`transition-colors ${pathname === '/balance' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
-                  Team Balancer
+                  Balancer
                 </Link>
                 
                 {/* Data Group */}
@@ -133,6 +133,9 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 </Link>
                 <Link href="/votes" className={`transition-colors ${pathname === '/votes' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
                   Vote Matrix
+                </Link>
+                <Link href="/timeline" className={`transition-colors ${pathname === '/timeline' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
+                  Timeline
                 </Link>
                 <Link href="/history" className={`transition-colors ${pathname === '/history' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
                   History
