@@ -172,6 +172,11 @@ export default function BalancePage() {
     // availablePlayers will auto-sync via useEffect
   }
 
+  const resetTeams = () => {
+    setTeam1({ players: [] })
+    setTeam2({ players: [] })
+  }
+
   const getDisplayName = (player: Player) => {
     return player.custom_name || player.display_name || 'Unknown'
   }
@@ -387,14 +392,25 @@ export default function BalancePage() {
                 </div>
               </div>
             </div>
-            <Button 
-              onClick={balanceTeams}
-              disabled={availablePlayers.length === 0}
-              size="lg"
-              className="bg-green-600 hover:bg-green-700 text-white font-bold"
-            >
-              ⚖️ Balance Teams
-            </Button>
+            <div className="flex gap-3">
+              <Button 
+                onClick={resetTeams}
+                disabled={team1.players.length === 0 && team2.players.length === 0}
+                size="lg"
+                variant="outline"
+                className="text-white border-white/20 hover:bg-white/10"
+              >
+                🔄 Reset Teams
+              </Button>
+              <Button 
+                onClick={balanceTeams}
+                disabled={availablePlayers.length === 0}
+                size="lg"
+                className="bg-green-600 hover:bg-green-700 text-white font-bold"
+              >
+                ⚖️ Balance Teams
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
