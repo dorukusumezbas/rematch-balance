@@ -135,9 +135,8 @@ export default function RatePage() {
           <h1 className="text-3xl font-bold text-white">Rate Players</h1>
           {unratedCount < players.length && (
             <Button
-              variant="outline"
               onClick={() => setHideRated(!hideRated)}
-              className="text-white border-white/20 hover:bg-white/10"
+              className="bg-slate-700 hover:bg-slate-600 text-white border border-slate-500"
             >
               {hideRated ? 'Show All' : 'Hide Rated'}
             </Button>
@@ -152,7 +151,7 @@ export default function RatePage() {
             )}
           </p>
           {totalPendingCount > 0 && (
-            <Badge variant="default" className="bg-yellow-600">
+            <Badge className="bg-yellow-600 text-white">
               {totalPendingCount} unsaved change{totalPendingCount !== 1 ? 's' : ''}
             </Badge>
           )}
@@ -191,7 +190,7 @@ export default function RatePage() {
                         <Badge variant="destructive" className="text-xs animate-pulse">NOT RATED</Badge>
                       )}
                       {hasUnsavedChanges && !isSaving && (
-                        <Badge variant="default" className="text-xs bg-yellow-600">Unsaved</Badge>
+                        <Badge className="text-xs bg-yellow-600 text-white">Unsaved</Badge>
                       )}
                       {isSaving && (
                         <Badge variant="secondary" className="text-xs">Saving...</Badge>
