@@ -200,11 +200,11 @@ export default function BalancePage() {
       </div>
 
       {/* Online Player Selection */}
-      <Card className="mb-6">
+      <Card className="mb-6 bg-slate-800/50 border-slate-700">
         <CardHeader>
           <CardTitle className="text-white flex items-center justify-between">
             <span>Select Online Players ({onlineCount} online)</span>
-            <Button onClick={resetAll} variant="outline" size="sm">
+            <Button onClick={resetAll} variant="outline" size="sm" className="text-white border-white/20 hover:bg-white/10">
               Reset All
             </Button>
           </CardTitle>
@@ -238,7 +238,7 @@ export default function BalancePage() {
       {/* Teams and Available Pool */}
       <div className="grid md:grid-cols-3 gap-6 mb-6">
         {/* Available Players */}
-        <Card className="bg-slate-800/50">
+        <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
             <CardTitle className="text-white">
               Available Players ({availablePlayers.length})
@@ -375,7 +375,7 @@ export default function BalancePage() {
       </div>
 
       {/* Balance Stats and Actions */}
-      <Card className="bg-slate-800/50">
+      <Card className="bg-slate-800/50 border-slate-700">
         <CardContent className="py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
