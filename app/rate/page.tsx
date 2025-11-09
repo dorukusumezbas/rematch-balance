@@ -200,9 +200,9 @@ export default function RatePage() {
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold text-primary">
-                      {currentScore || '-'}
+                      {currentScore ? currentScore.toFixed(2) : '-'}
                     </div>
-                    <div className="text-xs text-muted-foreground">/ 10</div>
+                    <div className="text-xs text-muted-foreground">/ 10.00</div>
                   </div>
                 </div>
               </CardHeader>
@@ -211,15 +211,15 @@ export default function RatePage() {
                   <Slider
                     min={1}
                     max={10}
-                    step={1}
+                    step={0.25}
                     value={currentScore || 5}
                     onValueChange={(value) => handleVoteChange(player.user_id, value)}
                     disabled={isSaving}
                   />
                   <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>1 - Beginner</span>
-                    <span>5 - Average</span>
-                    <span>10 - Pro</span>
+                    <span>1.0 - Beginner</span>
+                    <span>5.0 - Average</span>
+                    <span>10.0 - Pro</span>
                   </div>
                   {hasUnsavedChanges && (
                     <Button 

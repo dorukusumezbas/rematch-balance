@@ -16,6 +16,7 @@ This folder contains all database schema changes in chronological order.
 | 001 | `001_initial_schema.sql`   | Initial database setup with players, votes, and ratings | ✅       |
 | 002 | `002_add_custom_names.sql` | Add custom_name field to players table                  | ✅       |
 | 003 | `003_add_vote_history.sql` | Add vote_history table with automatic logging trigger   | ⏳       |
+| 004 | `004_change_score_to_decimal.sql` | Change score from integer to decimal (0.25 granularity) | ⏳       |
 
 ## Creating New Migrations
 

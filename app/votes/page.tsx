@@ -139,7 +139,7 @@ export default function VotesPage() {
                               <div className="text-gray-500 text-sm font-medium">-</div>
                             ) : (
                               <div className={`text-base py-2 px-3 rounded ${getScoreColor(score)}`}>
-                                {score || '?'}
+                                {score ? score.toFixed(2) : '?'}
                               </div>
                             )}
                           </td>
