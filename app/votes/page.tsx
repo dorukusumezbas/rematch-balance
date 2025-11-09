@@ -161,13 +161,25 @@ export default function VotesPage() {
                     return (
                     <tr key={voter.user_id} className="hover:bg-slate-700/30">
                       <td className="sticky left-0 bg-slate-800 z-10 p-3 border border-slate-600">
-                        <div className="flex items-center justify-between gap-3" title={`${getDisplayName(voter)} - Generosity Score: ${generosityScore.toFixed(2)} (average score they give to others)`}>
+                        <div className="flex items-center justify-between gap-3 group relative">
                           <span className="font-semibold text-white truncate">
                             {getDisplayName(voter)}
                           </span>
-                          <span className="text-xs font-bold whitespace-nowrap text-slate-400">
+                          <span className="text-xs font-bold whitespace-nowrap text-slate-400 cursor-help">
                             Generosity: {generosityScore.toFixed(2)}
                           </span>
+                          {/* Custom Tooltip */}
+                          <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 hidden group-hover:block z-50 pointer-events-none">
+                            <div className="bg-slate-900 text-white text-sm px-4 py-3 rounded-lg shadow-xl border border-slate-700 whitespace-nowrap">
+                              <div className="font-semibold mb-1">{getDisplayName(voter)}</div>
+                              <div className="text-slate-300">
+                                <span className="font-medium">Generosity Score:</span> {generosityScore.toFixed(2)}
+                              </div>
+                              <div className="text-xs text-slate-400 mt-1">
+                                Average score they give to others
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </td>
                       {players.map(target => {
