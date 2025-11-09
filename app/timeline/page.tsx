@@ -167,6 +167,20 @@ export default function TimelinePage() {
   const calculateTimeline = (history: VoteHistory[], playerIds: string[], baselineVotes: any[]): TimelineDataPoint[] => {
     if (history.length === 0) return []
 
+    // Determine bucket size based on time range
+    const getBucketSize = (): number => {
+      switch (timeRange) {
+        case '1w': return 12 * 60 * 60 * 1000 // 12 hours
+        case '1m': return 24 * 60 * 60 * 1000 // 1 day
+        case '3m': return 3 * 24 * 60 * 60 * 1000 // 3 days
+        default: return 24 * 60 * 60 * 1000
+      }
+    }
+
+    const bucketSize = getBucketSize()
+    const startDate = getTimeRangeDate(timeRange).getTime()
+    const endDate = Date.now()
+
     // Sort all history by timestamp
     const sortedHistory = [...history].sort((a, b) => 
       new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
@@ -176,40 +190,60 @@ export default function TimelinePage() {
     const currentVotes = new Map<string, Map<string, number>>() // playerId -> (voterId -> score)
     playerIds.forEach(id => currentVotes.set(id, new Map()))
 
-    const dataPoints: TimelineDataPoint[] = []
-    
-    // Process each vote change chronologically
-    sortedHistory.forEach((vote, index) => {
-      const timestamp = new Date(vote.created_at).getTime()
-      
-      // Update the vote state
+    // Initialize with baseline votes
+    baselineVotes.forEach((vote: any) => {
       const playerVotes = currentVotes.get(vote.target_id)
       if (playerVotes) {
         playerVotes.set(vote.voter_id, vote.score)
       }
+    })
 
-      // Create a data point (skip if next vote is at same timestamp to avoid duplicates)
-      const nextVote = sortedHistory[index + 1]
-      const nextTimestamp = nextVote ? new Date(nextVote.created_at).getTime() : null
-      
-      if (nextTimestamp === null || nextTimestamp !== timestamp) {
-        const point: TimelineDataPoint = {
-          date: new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-          timestamp
-        }
+    // Process vote history to update state
+    let historyIndex = 0
+    const dataPoints: TimelineDataPoint[] = []
 
-        // Calculate averages at this point in time
-        playerIds.forEach(playerId => {
-          const votes = currentVotes.get(playerId)!
-          if (votes.size > 0) {
-            const avg = Array.from(votes.values()).reduce((sum, score) => sum + score, 0) / votes.size
-            point[playerId] = parseFloat(avg.toFixed(2))
+    // Create buckets
+    for (let bucketStart = startDate; bucketStart <= endDate; bucketStart += bucketSize) {
+      const bucketEnd = Math.min(bucketStart + bucketSize, endDate)
+
+      // Apply all votes that happened in this bucket
+      while (historyIndex < sortedHistory.length) {
+        const vote = sortedHistory[historyIndex]
+        const voteTime = new Date(vote.created_at).getTime()
+        
+        if (voteTime <= bucketEnd) {
+          // Apply this vote
+          const playerVotes = currentVotes.get(vote.target_id)
+          if (playerVotes) {
+            playerVotes.set(vote.voter_id, vote.score)
           }
-        })
+          historyIndex++
+        } else {
+          break
+        }
+      }
 
+      // Create data point at end of bucket with current state
+      const point: TimelineDataPoint = {
+        date: new Date(bucketEnd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        timestamp: bucketEnd
+      }
+
+      // Calculate averages at this point in time
+      let hasData = false
+      playerIds.forEach(playerId => {
+        const votes = currentVotes.get(playerId)!
+        if (votes.size > 0) {
+          const avg = Array.from(votes.values()).reduce((sum, score) => sum + score, 0) / votes.size
+          point[playerId] = parseFloat(avg.toFixed(2))
+          hasData = true
+        }
+      })
+
+      if (hasData) {
         dataPoints.push(point)
       }
-    })
+    }
 
     return dataPoints
   }
@@ -397,9 +431,10 @@ export default function TimelinePage() {
                     type="monotone"
                     dataKey={playerId}
                     stroke={getPlayerColor(playerId)}
-                    strokeWidth={2}
-                    dot={{ r: 3 }}
-                    activeDot={{ r: 5 }}
+                    strokeWidth={2.5}
+                    dot={{ r: 4 }}
+                    activeDot={{ r: 6 }}
+                    connectNulls
                   />
                 ))}
               </LineChart>
