@@ -18,7 +18,7 @@ export default function Home() {
             <div className="grid md:grid-cols-3 gap-4 text-sm text-slate-200">
               <div>
                 <span className="font-semibold text-blue-300">1. Rate Players</span>
-                <p className="mt-1">Vote for your teammates on a scale of 1-10 based on their skill level</p>
+                <p className="mt-1">Vote for your teammates on a scale of 0-10 based on their skill level</p>
               </div>
               <div>
                 <span className="font-semibold text-purple-300">2. View Rankings</span>
@@ -42,7 +42,7 @@ export default function Home() {
               ⭐ Rate Players
             </CardTitle>
             <CardDescription className="text-slate-400">
-              Rate your teammates from 1-10 based on their skill level
+              Rate your teammates from 0-10 based on their skill level
             </CardDescription>
           </CardHeader>
           <CardContent>
