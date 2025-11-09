@@ -17,6 +17,7 @@ This folder contains all database schema changes in chronological order.
 | 002 | `002_add_custom_names.sql`        | Add custom_name field to players table                  | ✅       |
 | 003 | `003_add_vote_history.sql`        | Add vote_history table with automatic logging trigger   | ⏳       |
 | 004 | `004_change_score_to_decimal.sql` | Change score from integer to decimal (0.25 granularity) | ⏳       |
+| 005 | `005_fix_score_precision.sql`     | Fix score precision numeric(3,2) → numeric(4,2) for 10.00 support | ⏳       |
 
 ## Creating New Migrations
 
