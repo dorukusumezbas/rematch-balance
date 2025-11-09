@@ -170,7 +170,7 @@ export default function RatePage() {
           
           return (
             <Card key={player.user_id} className={!savedScore ? 'border-destructive border-2 bg-destructive/10' : 'bg-slate-800/50 border-slate-700'}>
-              <CardContent className="p-4">
+              <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
                   {avatarUrl ? (
                     <img 
