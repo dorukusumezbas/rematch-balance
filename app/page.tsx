@@ -64,7 +64,7 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <Link href="/votes">
-            <Button className="w-full" variant="outline">View Matrix</Button>
+            <Button className="w-full text-white border-white/20 hover:bg-white/10" variant="outline">View Matrix</Button>
           </Link>
         </CardContent>
       </Card>
@@ -80,7 +80,7 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <Link href="/profile">
-            <Button className="w-full" variant="outline">Edit Profile</Button>
+            <Button className="w-full text-white border-white/20 hover:bg-white/10" variant="outline">Edit Profile</Button>
           </Link>
         </CardContent>
       </Card>

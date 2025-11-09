@@ -135,7 +135,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
               <span className="text-white/80 text-sm hidden sm:inline">
                 {session.user.user_metadata.full_name || session.user.email}
               </span>
-              <Button onClick={handleSignOut} variant="outline" size="sm">
+              <Button onClick={handleSignOut} variant="outline" size="sm" className="text-white border-white/20 hover:bg-white/10">
                 Sign Out
               </Button>
             </div>

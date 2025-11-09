@@ -11,6 +11,8 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true)
   const [players, setPlayers] = useState<Player[]>([])
   const [updating, setUpdating] = useState<Set<string>>(new Set())
+  const [editingName, setEditingName] = useState<string | null>(null)
+  const [editNameValue, setEditNameValue] = useState('')
 
   useEffect(() => {
     checkAdminAndLoadPlayers()
@@ -115,6 +117,45 @@ export default function AdminPage() {
     return player.custom_name || player.display_name || 'Unknown'
   }
 
+  const startEditingName = (playerId: string, currentName: string) => {
+    setEditingName(playerId)
+    setEditNameValue(currentName)
+  }
+
+  const cancelEditingName = () => {
+    setEditingName(null)
+    setEditNameValue('')
+  }
+
+  const saveCustomName = async (playerId: string) => {
+    setUpdating(prev => new Set(prev).add(playerId))
+
+    const { error } = await supabase
+      .from('players')
+      .update({ custom_name: editNameValue.trim() || null })
+      .eq('user_id', playerId)
+
+    setUpdating(prev => {
+      const newSet = new Set(prev)
+      newSet.delete(playerId)
+      return newSet
+    })
+
+    if (error) {
+      console.error('Error updating name:', error)
+      alert('Failed to update name')
+      return
+    }
+
+    // Update local state
+    setPlayers(prev => prev.map(p => 
+      p.user_id === playerId ? { ...p, custom_name: editNameValue.trim() || null } : p
+    ))
+    
+    setEditingName(null)
+    setEditNameValue('')
+  }
+
   if (loading) {
     return <div className="text-white text-center">Loading...</div>
   }
@@ -156,35 +197,80 @@ export default function AdminPage() {
                   key={player.user_id}
                   className="p-4 bg-slate-700/50 rounded-lg border border-slate-600"
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div>
-                        <div className="font-semibold text-white flex items-center gap-2">
-                          {displayName}
-                          {player.is_admin && (
-                            <Badge className="bg-yellow-600 text-white">ADMIN</Badge>
-                          )}
-                          {!player.plays_rematch && (
-                            <Badge variant="secondary">View Only</Badge>
+                  <div className="space-y-3">
+                    {/* Top Row: Name and Badges */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3 flex-1">
+                        <div className="flex-1">
+                          {editingName === player.user_id ? (
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="text"
+                                value={editNameValue}
+                                onChange={(e) => setEditNameValue(e.target.value)}
+                                placeholder={player.display_name || 'Enter custom name...'}
+                                className="px-3 py-1 rounded border border-slate-500 bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                                autoFocus
+                              />
+                              <Button
+                                onClick={() => saveCustomName(player.user_id)}
+                                disabled={isUpdating}
+                                size="sm"
+                                className="bg-green-600 hover:bg-green-700 text-white"
+                              >
+                                Save
+                              </Button>
+                              <Button
+                                onClick={cancelEditingName}
+                                size="sm"
+                                variant="outline"
+                                className="text-white border-slate-500 hover:bg-slate-600"
+                              >
+                                Cancel
+                              </Button>
+                            </div>
+                          ) : (
+                            <div>
+                              <div className="font-semibold text-white flex items-center gap-2">
+                                {displayName}
+                                {player.is_admin && (
+                                  <Badge className="bg-yellow-600 text-white">ADMIN</Badge>
+                                )}
+                                {!player.plays_rematch && (
+                                  <Badge className="bg-slate-600 text-white">View Only</Badge>
+                                )}
+                                <button
+                                  onClick={() => startEditingName(player.user_id, player.custom_name || '')}
+                                  className="text-xs text-blue-400 hover:text-blue-300"
+                                >
+                                  ✏️ Edit Name
+                                </button>
+                              </div>
+                              {player.custom_name && player.display_name && (
+                                <div className="text-sm text-slate-400">
+                                  Discord: {player.display_name}
+                                </div>
+                              )}
+                              {!player.custom_name && player.display_name && (
+                                <div className="text-sm text-slate-500">
+                                  Using Discord name
+                                </div>
+                              )}
+                            </div>
                           )}
                         </div>
-                        {player.custom_name && player.display_name && (
-                          <div className="text-sm text-muted-foreground">
-                            Discord: {player.display_name}
-                          </div>
-                        )}
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    {/* Bottom Row: Action Buttons */}
+                    <div className="flex items-center gap-2">
                       <Button
                         onClick={() => togglePlaysRematch(player.user_id, player.plays_rematch)}
                         disabled={isUpdating}
                         size="sm"
-                        variant={player.plays_rematch ? "default" : "outline"}
                         className={player.plays_rematch ? 
                           "bg-green-600 hover:bg-green-700 text-white" : 
-                          "text-white border-white/20"}
+                          "bg-slate-600 hover:bg-slate-500 text-white border-slate-500"}
                       >
                         {isUpdating ? '...' : player.plays_rematch ? '✓ Plays Rematch' : '✕ View Only'}
                       </Button>
@@ -193,10 +279,9 @@ export default function AdminPage() {
                         onClick={() => toggleIsAdmin(player.user_id, player.is_admin)}
                         disabled={isUpdating}
                         size="sm"
-                        variant={player.is_admin ? "default" : "outline"}
                         className={player.is_admin ? 
                           "bg-yellow-600 hover:bg-yellow-700 text-white" : 
-                          "text-white border-white/20"}
+                          "bg-slate-600 hover:bg-slate-500 text-white border-slate-500"}
                       >
                         {isUpdating ? '...' : player.is_admin ? '👑 Admin' : 'Make Admin'}
                       </Button>
