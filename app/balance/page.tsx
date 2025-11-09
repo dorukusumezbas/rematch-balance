@@ -95,6 +95,15 @@ export default function BalancePage() {
   }
 
   const toggleOnline = (playerId: string) => {
+    const player = allPlayers.find(p => p.user_id === playerId)
+    if (!player) return
+    
+    // If marking as offline, remove from teams
+    if (player.is_online) {
+      setTeam1(prev => ({ players: prev.players.filter(p => p.user_id !== playerId) }))
+      setTeam2(prev => ({ players: prev.players.filter(p => p.user_id !== playerId) }))
+    }
+    
     setAllPlayers(prev => prev.map(p => 
       p.user_id === playerId ? { ...p, is_online: !p.is_online } : p
     ))
