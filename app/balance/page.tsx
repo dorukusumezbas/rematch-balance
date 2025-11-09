@@ -208,6 +208,14 @@ export default function BalancePage() {
     return player.custom_name || player.display_name || 'Unknown'
   }
 
+  const getRankTitle = (score: number) => {
+    if (score >= 8.5) return { emoji: '👑', title: 'Kral', color: 'bg-green-600' }
+    if (score >= 7) return { emoji: '🎖️', title: 'Vezir', color: 'bg-blue-600' }
+    if (score >= 5) return { emoji: '⚔️', title: 'Komutan', color: 'bg-yellow-600' }
+    if (score >= 2.5) return { emoji: '🪓', title: 'Oduncu', color: 'bg-orange-600' }
+    return { emoji: '🗑️', title: 'Çöp', color: 'bg-red-700' }
+  }
+
   // Drag and drop handlers
   const handleDragStart = (e: React.DragEvent, player: PlayerWithScore, source: 'available' | 'team1' | 'team2') => {
     e.stopPropagation()
@@ -370,9 +378,15 @@ export default function BalancePage() {
                     style={{ userSelect: 'none', WebkitUserSelect: 'none' } as React.CSSProperties}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-white font-medium">
-                        {getDisplayName(player)}
-                      </span>
+                      <div className="flex-1">
+                        <div className="text-white font-medium mb-1">
+                          {getDisplayName(player)}
+                        </div>
+                        <div className={`${getRankTitle(player.avg_score).color} px-2 py-0.5 rounded text-white text-xs font-semibold inline-flex items-center gap-1`}>
+                          <span>{getRankTitle(player.avg_score).emoji}</span>
+                          <span>{getRankTitle(player.avg_score).title}</span>
+                        </div>
+                      </div>
                       <Badge>{player.avg_score.toFixed(2)}</Badge>
                     </div>
                     <div className="flex gap-2">
@@ -430,13 +444,19 @@ export default function BalancePage() {
                     style={{ userSelect: 'none', WebkitUserSelect: 'none' } as React.CSSProperties}
                   >
                     <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-white font-medium">
+                      <div className="flex-1">
+                        <div className="text-white font-medium mb-1">
                           {getDisplayName(player)}
                         </div>
-                        <Badge variant="secondary" className="mt-1">
-                          {player.avg_score.toFixed(2)}
-                        </Badge>
+                        <div className="flex items-center gap-2">
+                          <div className={`${getRankTitle(player.avg_score).color} px-2 py-0.5 rounded text-white text-xs font-semibold inline-flex items-center gap-1`}>
+                            <span>{getRankTitle(player.avg_score).emoji}</span>
+                            <span>{getRankTitle(player.avg_score).title}</span>
+                          </div>
+                          <Badge variant="secondary" className="text-xs">
+                            {player.avg_score.toFixed(2)}
+                          </Badge>
+                        </div>
                       </div>
                       <AppButton 
                         onClick={() => removeFromTeam1(player)}
@@ -483,13 +503,19 @@ export default function BalancePage() {
                     style={{ userSelect: 'none', WebkitUserSelect: 'none' } as React.CSSProperties}
                   >
                     <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-white font-medium">
+                      <div className="flex-1">
+                        <div className="text-white font-medium mb-1">
                           {getDisplayName(player)}
                         </div>
-                        <Badge variant="secondary" className="mt-1">
-                          {player.avg_score.toFixed(2)}
-                        </Badge>
+                        <div className="flex items-center gap-2">
+                          <div className={`${getRankTitle(player.avg_score).color} px-2 py-0.5 rounded text-white text-xs font-semibold inline-flex items-center gap-1`}>
+                            <span>{getRankTitle(player.avg_score).emoji}</span>
+                            <span>{getRankTitle(player.avg_score).title}</span>
+                          </div>
+                          <Badge variant="secondary" className="text-xs">
+                            {player.avg_score.toFixed(2)}
+                          </Badge>
+                        </div>
                       </div>
                       <AppButton 
                         onClick={() => removeFromTeam2(player)}
