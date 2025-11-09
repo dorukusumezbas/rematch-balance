@@ -86,10 +86,10 @@ export default function ProfilePage() {
         <CardContent className="space-y-6">
           {/* Discord Name (read-only) */}
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
-              Discord Name
+            <label className="block text-sm font-medium text-slate-400 mb-2 flex items-center gap-2">
+              🔒 Discord Name <span className="text-xs font-normal">(cannot be changed)</span>
             </label>
-            <div className="px-4 py-2.5 bg-slate-700/50 rounded-md text-slate-300 border border-slate-600">
+            <div className="px-4 py-2.5 bg-slate-900/50 rounded-md text-slate-400 border border-slate-700 cursor-not-allowed">
               {discordName}
             </div>
           </div>
