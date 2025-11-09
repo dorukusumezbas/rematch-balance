@@ -169,6 +169,7 @@ export default function TimelinePage() {
 
     // Calculate timeline data with history
     const timeline = calculateTimeline(voteHistory, playerIds, currentVotes || [])
+    console.log('Timeline data:', timeline)
     setTimelineData(timeline)
 
     // Calculate stats for each player
@@ -505,7 +506,8 @@ export default function TimelinePage() {
                     padding: '4px 0',
                     fontSize: '13px'
                   }}
-                  formatter={(value: number, name: string) => {
+                  formatter={(value: number, name: string, props: any) => {
+                    console.log('Tooltip value:', value, 'name:', name, 'payload:', props.payload)
                     const player = players.find(p => p.user_id === name)
                     const displayName = player ? getDisplayName(player) : name
                     return [value.toFixed(2), displayName]
