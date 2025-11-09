@@ -14,6 +14,7 @@ export default function RatePage() {
   const [loading, setLoading] = useState(true)
   const [hideRated, setHideRated] = useState(false)
   const [pendingVotes, setPendingVotes] = useState<Map<string, number>>(new Map())
+  const [saveTimeouts, setSaveTimeouts] = useState<Map<string, NodeJS.Timeout>>(new Map())
 
   useEffect(() => {
     loadData()
@@ -66,12 +67,29 @@ export default function RatePage() {
     // Mark as pending
     setPendingVotes(prev => new Map(prev).set(targetId, score))
     
-    // Debounce the actual save
-    const timeoutId = setTimeout(() => {
-      saveVote(targetId, score)
-    }, 300)
-
-    return () => clearTimeout(timeoutId)
+    // Clear any existing timeout for this player
+    setSaveTimeouts(prev => {
+      const existingTimeout = prev.get(targetId)
+      if (existingTimeout) {
+        clearTimeout(existingTimeout)
+      }
+      
+      // Create new timeout for debounced save
+      const newTimeout = setTimeout(() => {
+        saveVote(targetId, score)
+        // Clean up timeout reference after save
+        setSaveTimeouts(current => {
+          const updated = new Map(current)
+          updated.delete(targetId)
+          return updated
+        })
+      }, 300)
+      
+      // Store the new timeout
+      const updated = new Map(prev)
+      updated.set(targetId, newTimeout)
+      return updated
+    })
   }
 
   const saveVote = async (targetId: string, score: number) => {
