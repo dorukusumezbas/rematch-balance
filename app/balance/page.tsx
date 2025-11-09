@@ -432,7 +432,7 @@ export default function BalancePage() {
               </Badge>
             </CardTitle>
           </CardHeader>
-          <CardContent className="h-full">
+          <CardContent className="h-full pt-4">
             <div className="space-y-2 min-h-full">
               {team1.players.length === 0 ? (
                 <p className="text-slate-400 text-center py-8">Drop players here</p>
@@ -505,7 +505,7 @@ export default function BalancePage() {
               </Badge>
             </CardTitle>
           </CardHeader>
-          <CardContent className="h-full">
+          <CardContent className="h-full pt-4">
             <div className="space-y-2 min-h-full">
               {team2.players.length === 0 ? (
                 <p className="text-slate-400 text-center py-8">Drop players here</p>
