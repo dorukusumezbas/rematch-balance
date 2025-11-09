@@ -218,8 +218,8 @@ export default function RatePage() {
                     min={1}
                     max={10}
                     step={0.25}
-                    value={[currentScore || 5.5]}
-                    onValueChange={(value) => handleVoteChange(player.user_id, value[0])}
+                    value={currentScore || 5.5}
+                    onValueChange={(value) => handleVoteChange(player.user_id, value)}
                     disabled={isSaving}
                     className="mb-1"
                   />
