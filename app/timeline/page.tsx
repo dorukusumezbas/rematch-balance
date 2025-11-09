@@ -89,34 +89,37 @@ export default function TimelinePage() {
     const startDate = getTimeRangeDate(timeRange)
     const playerIds = Array.from(selectedPlayers)
 
+    // First, get all rematch player IDs
+    const { data: rematchPlayers, error: playersError } = await supabase
+      .from('players')
+      .select('user_id')
+      .eq('plays_rematch', true)
+
+    if (playersError) {
+      console.error('Error loading rematch players:', playersError)
+      return
+    }
+
+    const rematchPlayerIds = (rematchPlayers || []).map(p => p.user_id)
+
     // Fetch current votes for baseline
-    // Join with players to filter out votes from non-rematch players
     const { data: currentVotes, error: votesError } = await supabase
       .from('votes')
-      .select(`
-        *,
-        voter:voter_id (plays_rematch)
-      `)
+      .select('*')
       .in('target_id', playerIds)
+      .in('voter_id', rematchPlayerIds)
 
     if (votesError) {
       console.error('Error loading current votes:', votesError)
       return
     }
 
-    // Filter out votes from non-rematch players
-    const filteredCurrentVotes = (currentVotes || []).filter((v: any) => 
-      v.voter && v.voter.plays_rematch === true
-    )
-
     // Fetch vote history for selected players
     const { data: voteHistory, error: historyError } = await supabase
       .from('vote_history')
-      .select(`
-        *,
-        voter:voter_id (plays_rematch)
-      `)
+      .select('*')
       .in('target_id', playerIds)
+      .in('voter_id', rematchPlayerIds)
       .gte('created_at', startDate.toISOString())
       .order('created_at')
 
@@ -125,13 +128,8 @@ export default function TimelinePage() {
       return
     }
 
-    // Filter out votes from non-rematch players in history
-    const filteredVoteHistory = (voteHistory || []).filter((v: any) => 
-      v.voter && v.voter.plays_rematch === true
-    )
-
     // If no history, create a flat line showing current averages
-    if (!filteredVoteHistory || filteredVoteHistory.length === 0) {
+    if (!voteHistory || voteHistory.length === 0) {
       // Create two data points (start and end of range) with same values for flat line
       const startDate = getTimeRangeDate(timeRange)
       const endDate = new Date()
@@ -148,7 +146,7 @@ export default function TimelinePage() {
 
       let hasData = false
       playerIds.forEach(playerId => {
-        const playerVotes = filteredCurrentVotes.filter((v: any) => v.target_id === playerId)
+        const playerVotes = (currentVotes || []).filter((v: any) => v.target_id === playerId)
         
         if (playerVotes.length > 0) {
           const avg = playerVotes.reduce((sum: number, v: any) => sum + v.score, 0) / playerVotes.length
@@ -170,7 +168,7 @@ export default function TimelinePage() {
     }
 
     // Calculate timeline data with history
-    const timeline = calculateTimeline(filteredVoteHistory, playerIds, filteredCurrentVotes)
+    const timeline = calculateTimeline(voteHistory, playerIds, currentVotes || [])
     setTimelineData(timeline)
 
     // Calculate stats for each player
