@@ -109,7 +109,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 <img src="/logo.png" alt="ASLI CIKMAZI" className="h-8 w-auto" />
                 <span className="text-xl font-bold text-white">ASLI CIKMAZI</span>
               </Link>
-              <div className="hidden md:flex gap-3 items-center text-sm whitespace-nowrap">
+              <div className="hidden md:flex gap-3 items-center whitespace-nowrap">
                 <Link href="/" className={`transition-colors ${pathname === '/' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
                   Home
                 </Link>
