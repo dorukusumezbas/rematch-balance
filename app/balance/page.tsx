@@ -21,6 +21,8 @@ export default function BalancePage() {
   const [team2, setTeam2] = useState<Team>({ players: [] })
   const [availablePlayers, setAvailablePlayers] = useState<PlayerWithScore[]>([])
   const [loading, setLoading] = useState(true)
+  const [draggedPlayer, setDraggedPlayer] = useState<PlayerWithScore | null>(null)
+  const [dragSource, setDragSource] = useState<'available' | 'team1' | 'team2' | null>(null)
 
   useEffect(() => {
     loadPlayers()
@@ -206,6 +208,62 @@ export default function BalancePage() {
     return player.custom_name || player.display_name || 'Unknown'
   }
 
+  // Drag and drop handlers
+  const handleDragStart = (player: PlayerWithScore, source: 'available' | 'team1' | 'team2') => {
+    setDraggedPlayer(player)
+    setDragSource(source)
+  }
+
+  const handleDragEnd = () => {
+    setDraggedPlayer(null)
+    setDragSource(null)
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault() // Allow drop
+  }
+
+  const handleDropToAvailable = (e: React.DragEvent) => {
+    e.preventDefault()
+    if (!draggedPlayer || dragSource === 'available') return
+
+    if (dragSource === 'team1') {
+      removeFromTeam1(draggedPlayer)
+    } else if (dragSource === 'team2') {
+      removeFromTeam2(draggedPlayer)
+    }
+    setDraggedPlayer(null)
+    setDragSource(null)
+  }
+
+  const handleDropToTeam1 = (e: React.DragEvent) => {
+    e.preventDefault()
+    if (!draggedPlayer || dragSource === 'team1') return
+
+    if (dragSource === 'available') {
+      moveToTeam1(draggedPlayer)
+    } else if (dragSource === 'team2') {
+      removeFromTeam2(draggedPlayer)
+      moveToTeam1(draggedPlayer)
+    }
+    setDraggedPlayer(null)
+    setDragSource(null)
+  }
+
+  const handleDropToTeam2 = (e: React.DragEvent) => {
+    e.preventDefault()
+    if (!draggedPlayer || dragSource === 'team2') return
+
+    if (dragSource === 'available') {
+      moveToTeam2(draggedPlayer)
+    } else if (dragSource === 'team1') {
+      removeFromTeam1(draggedPlayer)
+      moveToTeam2(draggedPlayer)
+    }
+    setDraggedPlayer(null)
+    setDragSource(null)
+  }
+
   const onlineCount = allPlayers.filter(p => p.is_online).length
   const team1Total = calculateTeamTotal(team1)
   const team2Total = calculateTeamTotal(team2)
@@ -270,14 +328,21 @@ export default function BalancePage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2 min-h-[200px]">
+            <div 
+              className="space-y-2 min-h-[200px]"
+              onDragOver={handleDragOver}
+              onDrop={handleDropToAvailable}
+            >
               {availablePlayers.length === 0 ? (
                 <p className="text-slate-400 text-center py-8">No players available</p>
               ) : (
                 availablePlayers.map(player => (
                   <div
                     key={player.user_id}
-                    className="p-3 bg-slate-700 rounded-lg border border-slate-600"
+                    draggable
+                    onDragStart={() => handleDragStart(player, 'available')}
+                    onDragEnd={handleDragEnd}
+                    className="p-3 bg-slate-700 rounded-lg border border-slate-600 cursor-move hover:bg-slate-600 transition-colors"
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-white font-medium">
@@ -321,14 +386,21 @@ export default function BalancePage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2 min-h-[200px]">
+            <div 
+              className="space-y-2 min-h-[200px]"
+              onDragOver={handleDragOver}
+              onDrop={handleDropToTeam1}
+            >
               {team1.players.length === 0 ? (
                 <p className="text-slate-400 text-center py-8">Drop players here</p>
               ) : (
                 team1.players.map(player => (
                   <div
                     key={player.user_id}
-                    className="p-3 bg-blue-800/30 rounded-lg border border-blue-500/50"
+                    draggable
+                    onDragStart={() => handleDragStart(player, 'team1')}
+                    onDragEnd={handleDragEnd}
+                    className="p-3 bg-blue-800/30 rounded-lg border border-blue-500/50 cursor-move hover:bg-blue-800/50 transition-colors"
                   >
                     <div className="flex items-center justify-between">
                       <div>
@@ -365,14 +437,21 @@ export default function BalancePage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2 min-h-[200px]">
+            <div 
+              className="space-y-2 min-h-[200px]"
+              onDragOver={handleDragOver}
+              onDrop={handleDropToTeam2}
+            >
               {team2.players.length === 0 ? (
                 <p className="text-slate-400 text-center py-8">Drop players here</p>
               ) : (
                 team2.players.map(player => (
                   <div
                     key={player.user_id}
-                    className="p-3 bg-orange-800/30 rounded-lg border border-orange-500/50"
+                    draggable
+                    onDragStart={() => handleDragStart(player, 'team2')}
+                    onDragEnd={handleDragEnd}
+                    className="p-3 bg-orange-800/30 rounded-lg border border-orange-500/50 cursor-move hover:bg-orange-800/50 transition-colors"
                   >
                     <div className="flex items-center justify-between">
                       <div>
