@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 import { Session } from '@supabase/supabase-js'
 import { supabase, ensurePlayer } from '@/lib/supabaseClient'
 import { AppButton } from '@/components/AppButton'
@@ -10,6 +12,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     // Get initial session
@@ -102,33 +105,35 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-8">
-              <h1 className="text-xl font-bold text-white">🎮 ASLI CIKMAZI</h1>
+              <Link href="/" className="text-xl font-bold text-white hover:text-white/90 transition-colors cursor-pointer">
+                🎮 ASLI CIKMAZI
+              </Link>
               <div className="hidden md:flex gap-4">
-                <a href="/" className="text-white/80 hover:text-white transition-colors">
+                <Link href="/" className={`transition-colors ${pathname === '/' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
                   Home
-                </a>
-                <a href="/rate" className="text-white/80 hover:text-white transition-colors">
+                </Link>
+                <Link href="/rate" className={`transition-colors ${pathname === '/rate' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
                   Rate Players
-                </a>
-                <a href="/scoreboard" className="text-white/80 hover:text-white transition-colors">
+                </Link>
+                <Link href="/scoreboard" className={`transition-colors ${pathname === '/scoreboard' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
                   Scoreboard
-                </a>
-                <a href="/balance" className="text-white/80 hover:text-white transition-colors">
+                </Link>
+                <Link href="/balance" className={`transition-colors ${pathname === '/balance' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
                   Balance Teams
-                </a>
-                <a href="/votes" className="text-white/80 hover:text-white transition-colors">
+                </Link>
+                <Link href="/votes" className={`transition-colors ${pathname === '/votes' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
                   All Votes
-                </a>
-                <a href="/profile" className="text-white/80 hover:text-white transition-colors">
+                </Link>
+                <Link href="/profile" className={`transition-colors ${pathname === '/profile' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
                   Profile
-                </a>
-                <a href="/history" className="text-white/80 hover:text-white transition-colors">
+                </Link>
+                <Link href="/history" className={`transition-colors ${pathname === '/history' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
                   History
-                </a>
+                </Link>
                 {isAdmin && (
-                  <a href="/admin" className="text-yellow-400 hover:text-yellow-300 transition-colors font-semibold">
+                  <Link href="/admin" className={`transition-colors font-semibold ${pathname === '/admin' ? 'text-yellow-300 border-b-2 border-yellow-300' : 'text-yellow-400 hover:text-yellow-300'}`}>
                     Admin
-                  </a>
+                  </Link>
                 )}
               </div>
             </div>
