@@ -135,12 +135,12 @@ export default function TimelinePage() {
       const endDate = new Date()
       
       const startPoint: TimelineDataPoint = {
-        date: startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        date: startDate.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
         timestamp: startDate.getTime()
       }
       
       const endPoint: TimelineDataPoint = {
-        date: endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        date: endDate.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
         timestamp: endDate.getTime()
       }
 
@@ -210,7 +210,7 @@ export default function TimelinePage() {
     // If no history, show current state as flat line
     if (sortedHistory.length === 0) {
       const point: TimelineDataPoint = {
-        date: new Date(endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        date: new Date(endDate).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
         timestamp: endDate
       }
       playerIds.forEach(playerId => {
@@ -228,7 +228,7 @@ export default function TimelinePage() {
     
     if (startTime >= requestedStartDate && startTime < firstVoteTime) {
       const startPoint: TimelineDataPoint = {
-        date: new Date(startTime).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        date: new Date(startTime).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
         timestamp: startTime
       }
       playerIds.forEach(playerId => {
@@ -255,7 +255,7 @@ export default function TimelinePage() {
 
       // Create data point after this vote
       const point: TimelineDataPoint = {
-        date: new Date(voteTime).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        date: new Date(voteTime).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
         timestamp: voteTime
       }
 
@@ -277,7 +277,7 @@ export default function TimelinePage() {
 
     // Add end point (current state)
     const endPoint: TimelineDataPoint = {
-      date: new Date(endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      date: new Date(endDate).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
       timestamp: endDate
     }
     playerIds.forEach(playerId => {
@@ -490,10 +490,7 @@ export default function TimelinePage() {
                   content={({ active, payload, label }) => {
                     if (!active || !payload || payload.length === 0) return null
                     
-                    // Use the timestamp from the first payload entry to find the exact data point
                     const timestamp = payload[0].payload.timestamp
-                    const dataPoint = timelineData.find(d => d.timestamp === timestamp)
-                    if (!dataPoint) return null
                     
                     return (
                       <div style={{
@@ -521,7 +518,6 @@ export default function TimelinePage() {
                           const playerId = entry.dataKey
                           const player = players.find(p => p.user_id === playerId)
                           const displayName = player ? getDisplayName(player) : 'Unknown'
-                          // Use entry.value directly from Recharts which has the correct value
                           const value = entry.value
                           
                           return (
