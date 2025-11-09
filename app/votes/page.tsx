@@ -227,11 +227,11 @@ export default function VotesPage() {
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded bg-orange-600"></div>
-                <span>2.5-5 🛡️ Piyade</span>
+                <span>2.5-5 🪓 Oduncu</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded bg-red-700"></div>
-                <span>0-2.5 🪓 Oduncu</span>
+                <span>0-2.5 🗑️ Çöp</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded bg-slate-700"></div>
