@@ -21,6 +21,7 @@ This folder contains all database schema changes in chronological order.
 | 006 | `006_add_plays_rematch_and_admin.sql` | Add plays_rematch and is_admin flags with admin RLS policies | ⏳       |
 | 007 | `007_update_view_for_rematch_filter.sql` | Update player_ratings view to include plays_rematch field | ⏳       |
 | 008 | `008_allow_zero_scores.sql`       | Allow 0 as a valid score (0.0-10.0 range instead of 1.0-10.0) | ⏳       |
+| 009 | `009_exclude_non_rematch_voters.sql` | Exclude non-rematch players' votes from average calculations | ⏳       |
 
 ## Creating New Migrations
 
