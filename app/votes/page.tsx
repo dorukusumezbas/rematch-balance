@@ -56,11 +56,11 @@ export default function VotesPage() {
   }
 
   const getScoreColor = (score: number | null) => {
-    if (!score) return 'bg-gray-800/30 text-gray-600'
-    if (score >= 8) return 'bg-green-600/20 text-green-400 font-bold'
-    if (score >= 6) return 'bg-blue-600/20 text-blue-400 font-bold'
-    if (score >= 4) return 'bg-yellow-600/20 text-yellow-400 font-bold'
-    return 'bg-orange-600/20 text-orange-400 font-bold'
+    if (!score) return 'bg-slate-700 text-slate-400 font-semibold'
+    if (score >= 8) return 'bg-green-600 text-white font-bold'
+    if (score >= 6) return 'bg-blue-600 text-white font-bold'
+    if (score >= 4) return 'bg-yellow-600 text-white font-bold'
+    return 'bg-orange-600 text-white font-bold'
   }
 
   const getDisplayName = (player: Player) => {
