@@ -74,7 +74,7 @@ export default function ScoreboardPage() {
           return (
             <Card 
               key={rating.player_id} 
-              className={index < 3 ? 'border-primary/50 bg-primary/5' : 'bg-slate-800/50'}
+              className={index < 3 ? 'border-primary/50 bg-primary/5' : 'bg-slate-800/50 border-slate-700'}
             >
               <CardContent className="py-4">
                 <div className="flex items-center gap-4">
