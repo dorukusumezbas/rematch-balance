@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { SafeButton } from '@/components/SafeButton'
 import Link from 'next/link'
 
 export default function Home() {
@@ -16,7 +16,7 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <Link href="/rate">
-            <Button className="w-full">Go to Rating</Button>
+            <SafeButton fullWidth variant="primary">Go to Rating</SafeButton>
           </Link>
         </CardContent>
       </Card>
@@ -32,7 +32,7 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <Link href="/scoreboard">
-            <Button className="w-full">View Scoreboard</Button>
+            <SafeButton fullWidth variant="primary">View Scoreboard</SafeButton>
           </Link>
         </CardContent>
       </Card>
@@ -48,7 +48,7 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <Link href="/balance">
-            <Button className="w-full">Balance Teams</Button>
+            <SafeButton fullWidth variant="primary">Balance Teams</SafeButton>
           </Link>
         </CardContent>
       </Card>
@@ -64,7 +64,7 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <Link href="/votes">
-            <Button className="w-full text-white border-white/20 hover:bg-white/10" variant="outline">View Matrix</Button>
+            <SafeButton fullWidth variant="primary">View Matrix</SafeButton>
           </Link>
         </CardContent>
       </Card>
@@ -80,7 +80,7 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <Link href="/profile">
-            <Button className="w-full text-white border-white/20 hover:bg-white/10" variant="outline">Edit Profile</Button>
+            <SafeButton fullWidth variant="primary">Edit Profile</SafeButton>
           </Link>
         </CardContent>
       </Card>

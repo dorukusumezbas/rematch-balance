@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase, Player } from '@/lib/supabaseClient'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { SafeButton } from '@/components/SafeButton'
 import { Badge } from '@/components/ui/badge'
 
 type PlayerWithScore = Player & {
@@ -207,9 +207,9 @@ export default function BalancePage() {
         <CardHeader>
           <CardTitle className="text-white flex items-center justify-between">
             <span>Select Online Players ({onlineCount} online)</span>
-            <Button onClick={resetAll} variant="outline" size="sm" className="text-white border-white/20 hover:bg-white/10">
+            <SafeButton onClick={resetAll} variant="ghost" size="sm">
               Reset All
-            </Button>
+            </SafeButton>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -264,20 +264,22 @@ export default function BalancePage() {
                       <Badge>{player.avg_score.toFixed(2)}</Badge>
                     </div>
                     <div className="flex gap-2">
-                      <Button 
+                      <SafeButton 
                         onClick={() => moveToTeam1(player)}
                         size="sm" 
-                        className="flex-1 bg-blue-600 hover:bg-blue-700"
+                        className="flex-1"
+                        variant="primary"
                       >
                         → Team 1
-                      </Button>
-                      <Button 
+                      </SafeButton>
+                      <SafeButton 
                         onClick={() => moveToTeam2(player)}
                         size="sm"
-                        className="flex-1 bg-orange-600 hover:bg-orange-700"
+                        className="flex-1"
+                        variant="warning"
                       >
                         → Team 2
-                      </Button>
+                      </SafeButton>
                     </div>
                   </div>
                 ))
@@ -315,14 +317,13 @@ export default function BalancePage() {
                           {player.avg_score.toFixed(2)}
                         </Badge>
                       </div>
-                      <Button 
+                      <SafeButton 
                         onClick={() => removeFromTeam1(player)}
-                        variant="ghost"
+                        variant="danger"
                         size="sm"
-                        className="text-red-400 hover:text-red-300"
                       >
                         ✕
-                      </Button>
+                      </SafeButton>
                     </div>
                   </div>
                 ))
@@ -360,14 +361,13 @@ export default function BalancePage() {
                           {player.avg_score.toFixed(2)}
                         </Badge>
                       </div>
-                      <Button 
+                      <SafeButton 
                         onClick={() => removeFromTeam2(player)}
-                        variant="ghost"
+                        variant="danger"
                         size="sm"
-                        className="text-red-400 hover:text-red-300"
                       >
                         ✕
-                      </Button>
+                      </SafeButton>
                     </div>
                   </div>
                 ))
@@ -396,23 +396,23 @@ export default function BalancePage() {
               </div>
             </div>
             <div className="flex gap-3">
-              <Button 
+              <SafeButton 
                 onClick={resetTeams}
                 disabled={team1.players.length === 0 && team2.players.length === 0}
                 size="lg"
-                variant="outline"
-                className="text-white border-white/20 hover:bg-white/10"
+                variant="ghost"
               >
                 🔄 Reset Teams
-              </Button>
-              <Button 
+              </SafeButton>
+              <SafeButton 
                 onClick={balanceTeams}
                 disabled={availablePlayers.length === 0}
                 size="lg"
-                className="bg-green-600 hover:bg-green-700 text-white font-bold"
+                variant="success"
+                className="font-bold"
               >
                 ⚖️ Balance Teams
-              </Button>
+              </SafeButton>
             </div>
           </div>
         </CardContent>

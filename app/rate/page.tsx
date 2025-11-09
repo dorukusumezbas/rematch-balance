@@ -5,7 +5,7 @@ import { supabase, Player, Vote } from '@/lib/supabaseClient'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Slider } from '@/components/ui/slider'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { SafeButton } from '@/components/SafeButton'
 
 export default function RatePage() {
   const [players, setPlayers] = useState<Player[]>([])
@@ -135,12 +135,12 @@ export default function RatePage() {
         <div className="flex justify-between items-center mb-2">
           <h1 className="text-3xl font-bold text-white">Rate Players</h1>
           {unratedCount < players.length && (
-            <Button
+            <SafeButton
               onClick={() => setHideRated(!hideRated)}
-              className="bg-slate-700 hover:bg-slate-600 text-white border border-slate-500"
+              variant="secondary"
             >
               {hideRated ? 'Show All' : 'Hide Rated'}
-            </Button>
+            </SafeButton>
           )}
         </div>
         <div className="flex items-center gap-3">
@@ -233,14 +233,15 @@ export default function RatePage() {
 
                 {/* Save Button */}
                 {hasUnsavedChanges && (
-                  <Button 
+                  <SafeButton 
                     onClick={() => saveVote(player.user_id, currentScore!)}
                     disabled={isSaving}
-                    className="w-full"
+                    fullWidth
                     size="sm"
+                    variant="success"
                   >
                     {isSaving ? 'Saving...' : 'Save Vote'}
-                  </Button>
+                  </SafeButton>
                 )}
               </CardContent>
             </Card>
@@ -254,12 +255,13 @@ export default function RatePage() {
             <p className="text-xl text-white">
               🎉 You've rated all players! 
             </p>
-            <Button 
+            <SafeButton 
               onClick={() => setHideRated(false)} 
-              className="mt-4 bg-primary hover:bg-primary/90 text-white"
+              className="mt-4"
+              variant="primary"
             >
               Show All Players
-            </Button>
+            </SafeButton>
           </CardContent>
         </Card>
       )}

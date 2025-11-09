@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { supabase, Player } from '@/lib/supabaseClient'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { SafeButton } from '@/components/SafeButton'
 
 export default function AdminPage() {
   const [isAdmin, setIsAdmin] = useState(false)
@@ -212,22 +212,21 @@ export default function AdminPage() {
                                 className="px-3 py-1 rounded border border-slate-500 bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-primary"
                                 autoFocus
                               />
-                              <Button
+                              <SafeButton
                                 onClick={() => saveCustomName(player.user_id)}
                                 disabled={isUpdating}
                                 size="sm"
-                                className="bg-green-600 hover:bg-green-700 text-white"
+                                variant="success"
                               >
                                 Save
-                              </Button>
-                              <Button
+                              </SafeButton>
+                              <SafeButton
                                 onClick={cancelEditingName}
                                 size="sm"
-                                variant="outline"
-                                className="text-white border-slate-500 hover:bg-slate-600"
+                                variant="secondary"
                               >
                                 Cancel
-                              </Button>
+                              </SafeButton>
                             </div>
                           ) : (
                             <div>
@@ -264,27 +263,23 @@ export default function AdminPage() {
 
                     {/* Bottom Row: Action Buttons */}
                     <div className="flex items-center gap-2">
-                      <Button
+                      <SafeButton
                         onClick={() => togglePlaysRematch(player.user_id, player.plays_rematch)}
                         disabled={isUpdating}
                         size="sm"
-                        className={player.plays_rematch ? 
-                          "bg-green-600 hover:bg-green-700 text-white" : 
-                          "bg-slate-600 hover:bg-slate-500 text-white border-slate-500"}
+                        variant={player.plays_rematch ? "success" : "secondary"}
                       >
                         {isUpdating ? '...' : player.plays_rematch ? '✓ Plays Rematch' : '✕ View Only'}
-                      </Button>
+                      </SafeButton>
 
-                      <Button
+                      <SafeButton
                         onClick={() => toggleIsAdmin(player.user_id, player.is_admin)}
                         disabled={isUpdating}
                         size="sm"
-                        className={player.is_admin ? 
-                          "bg-yellow-600 hover:bg-yellow-700 text-white" : 
-                          "bg-slate-600 hover:bg-slate-500 text-white border-slate-500"}
+                        variant={player.is_admin ? "warning" : "secondary"}
                       >
                         {isUpdating ? '...' : player.is_admin ? '👑 Admin' : 'Make Admin'}
-                      </Button>
+                      </SafeButton>
                     </div>
                   </div>
                 </div>

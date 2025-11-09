@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { SafeButton } from '@/components/SafeButton'
 
 export default function ProfilePage() {
   const [currentUser, setCurrentUser] = useState<any>(null)
@@ -168,14 +168,14 @@ export default function ProfilePage() {
                 This will update your display name and rematch player status
               </p>
             </div>
-            <Button 
+            <SafeButton 
               onClick={handleSave} 
               disabled={saving}
               size="lg"
-              className="bg-primary hover:bg-primary/90 text-white"
+              variant="primary"
             >
               {saving ? 'Saving...' : 'Save All Changes'}
-            </Button>
+            </SafeButton>
           </div>
           {successMessage && (
             <p className="text-green-400 text-sm mt-4 text-center font-medium">{successMessage}</p>
