@@ -7,7 +7,7 @@ import { AppButton } from '@/components/AppButton'
 import { Badge } from '@/components/ui/badge'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
-type TimeRange = '1w' | '1m' | '3m'
+type TimeRange = '1d' | '1w' | '1m' | '3m'
 
 type TimelineDataPoint = {
   date: string
@@ -72,6 +72,8 @@ export default function TimelinePage() {
   const getTimeRangeDate = (range: TimeRange): Date => {
     const now = new Date()
     switch (range) {
+      case '1d':
+        return new Date(now.getTime() - 24 * 60 * 60 * 1000)
       case '1w':
         return new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
       case '1m':
@@ -167,24 +169,37 @@ export default function TimelinePage() {
   const calculateTimeline = (history: VoteHistory[], playerIds: string[], baselineVotes: any[]): TimelineDataPoint[] => {
     if (history.length === 0) return []
 
-    // Determine bucket size based on time range
+    // Find the earliest vote in history to determine actual data range
+    const sortedHistory = [...history].sort((a, b) => 
+      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    )
+    const earliestVote = new Date(sortedHistory[0].created_at).getTime()
+    const endDate = Date.now()
+    
+    // Use the later of (earliest vote, selected time range start) as the actual start
+    const requestedStartDate = getTimeRangeDate(timeRange).getTime()
+    const actualStartDate = Math.max(earliestVote, requestedStartDate)
+    const actualDataRange = endDate - actualStartDate
+
+    // Determine bucket size based on ACTUAL data range (not selected range)
     const getBucketSize = (): number => {
-      switch (timeRange) {
-        case '1w': return 12 * 60 * 60 * 1000 // 12 hours
-        case '1m': return 24 * 60 * 60 * 1000 // 1 day
-        case '3m': return 3 * 24 * 60 * 60 * 1000 // 3 days
-        default: return 24 * 60 * 60 * 1000
+      const oneDayMs = 24 * 60 * 60 * 1000
+      const oneWeekMs = 7 * oneDayMs
+      const oneMonthMs = 30 * oneDayMs
+
+      if (actualDataRange <= oneDayMs) {
+        return 2 * 60 * 60 * 1000 // 2 hours for <= 1 day of data
+      } else if (actualDataRange <= oneWeekMs) {
+        return 12 * 60 * 60 * 1000 // 12 hours for <= 1 week of data
+      } else if (actualDataRange <= oneMonthMs) {
+        return 24 * 60 * 60 * 1000 // 1 day for <= 1 month of data
+      } else {
+        return 3 * 24 * 60 * 60 * 1000 // 3 days for > 1 month of data
       }
     }
 
     const bucketSize = getBucketSize()
-    const startDate = getTimeRangeDate(timeRange).getTime()
-    const endDate = Date.now()
-
-    // Sort all history by timestamp
-    const sortedHistory = [...history].sort((a, b) => 
-      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-    )
+    const startDate = actualStartDate
 
     // Track current state of all votes for each player
     const currentVotes = new Map<string, Map<string, number>>() // playerId -> (voterId -> score)
@@ -326,6 +341,13 @@ export default function TimelinePage() {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-white">Time Range</h2>
             <div className="flex gap-2">
+              <AppButton
+                onClick={() => setTimeRange('1d')}
+                variant={timeRange === '1d' ? 'primary' : 'secondary'}
+                size="sm"
+              >
+                Last Day
+              </AppButton>
               <AppButton
                 onClick={() => setTimeRange('1w')}
                 variant={timeRange === '1w' ? 'primary' : 'secondary'}
