@@ -211,10 +211,25 @@ export default function BalancePage() {
   // Drag and drop handlers
   const handleDragStart = (e: React.DragEvent, player: PlayerWithScore, source: 'available' | 'team1' | 'team2') => {
     e.stopPropagation()
+    
+    // Clear any text selection to prevent text dragging
+    if (window.getSelection) {
+      window.getSelection()?.removeAllRanges()
+    }
+    
     setDraggedPlayer(player)
     setDragSource(source)
     // Set drag effect
     e.dataTransfer.effectAllowed = 'move'
+    // Set custom drag data to override text selection
+    e.dataTransfer.setData('text/plain', player.user_id)
+  }
+  
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Clear any existing text selection when starting to drag
+    if (window.getSelection) {
+      window.getSelection()?.removeAllRanges()
+    }
   }
 
   const handleDragEnd = (e: React.DragEvent) => {
@@ -348,9 +363,11 @@ export default function BalancePage() {
                   <div
                     key={player.user_id}
                     draggable
+                    onMouseDown={handleMouseDown}
                     onDragStart={(e) => handleDragStart(e, player, 'available')}
                     onDragEnd={handleDragEnd}
                     className="p-3 bg-slate-700 rounded-lg border border-slate-600 cursor-move hover:bg-slate-600 transition-colors select-none"
+                    style={{ userSelect: 'none', WebkitUserSelect: 'none' } as React.CSSProperties}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-white font-medium">
@@ -406,9 +423,11 @@ export default function BalancePage() {
                   <div
                     key={player.user_id}
                     draggable
+                    onMouseDown={handleMouseDown}
                     onDragStart={(e) => handleDragStart(e, player, 'team1')}
                     onDragEnd={handleDragEnd}
                     className="p-3 bg-blue-800/30 rounded-lg border border-blue-500/50 cursor-move hover:bg-blue-800/50 transition-colors select-none"
+                    style={{ userSelect: 'none', WebkitUserSelect: 'none' } as React.CSSProperties}
                   >
                     <div className="flex items-center justify-between">
                       <div>
@@ -457,9 +476,11 @@ export default function BalancePage() {
                   <div
                     key={player.user_id}
                     draggable
+                    onMouseDown={handleMouseDown}
                     onDragStart={(e) => handleDragStart(e, player, 'team2')}
                     onDragEnd={handleDragEnd}
                     className="p-3 bg-orange-800/30 rounded-lg border border-orange-500/50 cursor-move hover:bg-orange-800/50 transition-colors select-none"
+                    style={{ userSelect: 'none', WebkitUserSelect: 'none' } as React.CSSProperties}
                   >
                     <div className="flex items-center justify-between">
                       <div>
