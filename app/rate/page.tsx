@@ -170,7 +170,7 @@ export default function RatePage() {
           const displayName = player.custom_name || player.display_name || 'Unknown Player'
           
           return (
-            <Card key={player.user_id} className={!savedScore ? 'border-destructive border-2 bg-destructive/5' : ''}>
+            <Card key={player.user_id} className={!savedScore ? 'border-destructive border-2 bg-destructive/10' : 'bg-slate-800/50 border-slate-700'}>
               <CardContent className="py-3">
                 <div className="flex items-center gap-3 mb-3">
                   {avatarUrl ? (
@@ -244,14 +244,14 @@ export default function RatePage() {
       </div>
 
       {displayedPlayers.length === 0 && hideRated && (
-        <Card>
+        <Card className="bg-slate-800/50 border-slate-700">
           <CardContent className="py-12 text-center">
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl text-white">
               🎉 You've rated all players! 
             </p>
             <Button 
               onClick={() => setHideRated(false)} 
-              className="mt-4"
+              className="mt-4 bg-primary hover:bg-primary/90 text-white"
             >
               Show All Players
             </Button>
