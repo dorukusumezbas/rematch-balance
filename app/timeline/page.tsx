@@ -417,6 +417,12 @@ export default function TimelinePage() {
                     color: '#fff'
                   }}
                   formatter={(value: number) => value.toFixed(2)}
+                  labelFormatter={(label) => label}
+                  itemFormatter={(value: number, name: string) => {
+                    const player = players.find(p => p.user_id === name)
+                    const displayName = player ? getDisplayName(player) : name
+                    return [value.toFixed(2), displayName]
+                  }}
                 />
                 <Legend 
                   wrapperStyle={{ color: '#fff' }}
