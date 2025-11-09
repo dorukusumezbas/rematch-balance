@@ -133,14 +133,16 @@ export default function VotesPage() {
                     {players.map(target => (
                       <th 
                         key={target.user_id} 
-                        className="p-3 border border-slate-600 text-center text-sm font-semibold min-w-[100px] bg-slate-800"
+                        className="p-3 border border-slate-600 text-center text-sm font-semibold min-w-[120px] bg-slate-800"
                         title={`${getDisplayName(target)} - Avg: ${target.avg_score.toFixed(2)}`}
                       >
-                        <div className="truncate max-w-[100px] text-white">
-                          {getDisplayName(target)}
-                        </div>
-                        <div className={`text-xs font-bold mt-1 ${getAvgScoreColor(target.avg_score)}`}>
-                          {target.avg_score.toFixed(2)}
+                        <div className="flex items-center justify-center gap-2">
+                          <span className="truncate text-white">
+                            {getDisplayName(target)}
+                          </span>
+                          <span className={`text-xs font-bold ${getAvgScoreColor(target.avg_score)}`}>
+                            {target.avg_score.toFixed(2)}
+                          </span>
                         </div>
                       </th>
                     ))}
@@ -149,12 +151,9 @@ export default function VotesPage() {
                 <tbody>
                   {players.map(voter => (
                     <tr key={voter.user_id} className="hover:bg-slate-700/30">
-                      <td className="sticky left-0 bg-slate-800 z-10 p-3 border border-slate-600">
-                        <div className="truncate max-w-[150px]" title={`${getDisplayName(voter)} - Avg: ${voter.avg_score.toFixed(2)}`}>
-                          <div className="font-semibold text-white">{getDisplayName(voter)}</div>
-                          <div className={`text-xs font-bold ${getAvgScoreColor(voter.avg_score)}`}>
-                            {voter.avg_score.toFixed(2)}
-                          </div>
+                      <td className="sticky left-0 bg-slate-800 z-10 p-3 border border-slate-600 font-semibold text-white">
+                        <div className="truncate max-w-[150px]" title={getDisplayName(voter)}>
+                          {getDisplayName(voter)}
                         </div>
                       </td>
                       {players.map(target => {
