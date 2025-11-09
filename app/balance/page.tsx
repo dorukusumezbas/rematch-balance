@@ -284,8 +284,8 @@ export default function BalancePage() {
         </Card>
 
         {/* Team 1 */}
-        <Card className="bg-blue-900/20 border-blue-500/50">
-          <CardHeader>
+        <Card className="bg-slate-800/80 border-blue-500/50">
+          <CardHeader className="bg-blue-900/30">
             <CardTitle className="text-white flex items-center justify-between">
               <span>Team 1</span>
               <Badge className="bg-blue-600 text-white text-lg">
@@ -329,8 +329,8 @@ export default function BalancePage() {
         </Card>
 
         {/* Team 2 */}
-        <Card className="bg-orange-900/20 border-orange-500/50">
-          <CardHeader>
+        <Card className="bg-slate-800/80 border-orange-500/50">
+          <CardHeader className="bg-orange-900/30">
             <CardTitle className="text-white flex items-center justify-between">
               <span>Team 2</span>
               <Badge className="bg-orange-600 text-white text-lg">
