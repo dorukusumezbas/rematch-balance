@@ -26,6 +26,18 @@ export default function BalancePage() {
     loadPlayers()
   }, [])
 
+  // Auto-sync available players when allPlayers, team1, or team2 changes
+  useEffect(() => {
+    const assignedIds = new Set([
+      ...team1.players.map(p => p.user_id),
+      ...team2.players.map(p => p.user_id)
+    ])
+    
+    setAvailablePlayers(
+      allPlayers.filter(p => p.is_online && !assignedIds.has(p.user_id))
+    )
+  }, [allPlayers, team1.players, team2.players])
+
   const loadPlayers = async () => {
     // Get all players with their ratings
     const { data: ratingsData, error } = await supabase
@@ -57,46 +69,25 @@ export default function BalancePage() {
   }
 
   const toggleOnline = (playerId: string) => {
-    setAllPlayers(prev => {
-      const updated = prev.map(p => 
-        p.user_id === playerId ? { ...p, is_online: !p.is_online } : p
-      )
-      
-      // Update available players based on new allPlayers state
-      setAvailablePlayers(
-        updated.filter(p => 
-          p.is_online && 
-          !team1.players.find(t => t.user_id === p.user_id) && 
-          !team2.players.find(t => t.user_id === p.user_id)
-        )
-      )
-      
-      return updated
-    })
+    setAllPlayers(prev => prev.map(p => 
+      p.user_id === playerId ? { ...p, is_online: !p.is_online } : p
+    ))
   }
 
   const moveToTeam1 = (player: PlayerWithScore) => {
     setTeam1(prev => ({ players: [...prev.players, player] }))
-    setAvailablePlayers(prev => prev.filter(p => p.user_id !== player.user_id))
   }
 
   const moveToTeam2 = (player: PlayerWithScore) => {
     setTeam2(prev => ({ players: [...prev.players, player] }))
-    setAvailablePlayers(prev => prev.filter(p => p.user_id !== player.user_id))
   }
 
   const removeFromTeam1 = (player: PlayerWithScore) => {
     setTeam1(prev => ({ players: prev.players.filter(p => p.user_id !== player.user_id) }))
-    if (player.is_online) {
-      setAvailablePlayers(prev => [...prev, player])
-    }
   }
 
   const removeFromTeam2 = (player: PlayerWithScore) => {
     setTeam2(prev => ({ players: prev.players.filter(p => p.user_id !== player.user_id) }))
-    if (player.is_online) {
-      setAvailablePlayers(prev => [...prev, player])
-    }
   }
 
   const calculateTeamTotal = (team: Team): number => {
@@ -178,7 +169,7 @@ export default function BalancePage() {
   const resetAll = () => {
     setTeam1({ players: [] })
     setTeam2({ players: [] })
-    setAvailablePlayers(allPlayers.filter(p => p.is_online))
+    // availablePlayers will auto-sync via useEffect
   }
 
   const getDisplayName = (player: Player) => {
