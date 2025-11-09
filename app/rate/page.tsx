@@ -170,7 +170,7 @@ export default function RatePage() {
           const displayName = player.custom_name || player.display_name || 'Unknown Player'
           
           return (
-            <Card key={player.user_id} className={!savedScore ? 'border-destructive border-2 bg-destructive/10' : 'bg-slate-800/50 border-slate-700'}>
+            <Card key={player.user_id} className={savedScore === undefined ? 'border-destructive border-2 bg-destructive/10' : 'bg-slate-800/50 border-slate-700'}>
               <CardContent className="p-4">
                 {/* Header: Avatar + Name + Badges | Score */}
                 <div className="flex items-center justify-between mb-4">
@@ -189,7 +189,7 @@ export default function RatePage() {
                     <div>
                       <div className="font-semibold text-white text-base mb-1">{displayName}</div>
                       <div className="flex items-center gap-1.5">
-                        {!savedScore && (
+                        {savedScore === undefined && (
                           <Badge variant="destructive" className="text-xs animate-pulse px-2 py-0">NOT RATED</Badge>
                         )}
                         {hasUnsavedChanges && !isSaving && (
@@ -201,25 +201,25 @@ export default function RatePage() {
                       </div>
                     </div>
                   </div>
-                  <div className="text-3xl font-bold" style={{ color: currentScore ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))' }}>
-                    {currentScore ? currentScore.toFixed(2) : '—'}
+                  <div className="text-3xl font-bold" style={{ color: currentScore !== undefined ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))' }}>
+                    {currentScore !== undefined ? currentScore.toFixed(2) : '—'}
                   </div>
                 </div>
 
                 {/* Warning Message */}
-                {!savedScore && !pendingScore && (
+                {savedScore === undefined && pendingScore === undefined && (
                   <div className="text-center text-xs text-destructive font-medium mb-3 bg-destructive/10 py-1.5 rounded">
                     ⚠️ Drag the slider to rate this player
                   </div>
                 )}
                 
                 {/* Slider */}
-                <div className={`mb-3 ${!savedScore && !pendingScore ? 'opacity-50' : ''}`}>
+                <div className={`mb-3 ${savedScore === undefined && pendingScore === undefined ? 'opacity-50' : ''}`}>
                   <Slider
                     min={0}
                     max={10}
                     step={0.25}
-                    value={currentScore || 5.0}
+                    value={currentScore !== undefined ? currentScore : 5.0}
                     onValueChange={(value) => handleVoteChange(player.user_id, value)}
                     disabled={isSaving}
                     className="mb-1"
