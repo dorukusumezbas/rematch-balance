@@ -5,10 +5,13 @@
 -- Run this in Supabase SQL Editor
 -- ============================================
 
--- NOTE: This uses fake UUIDs that won't match real auth.users
+-- NOTE: This temporarily disables foreign key constraint
 -- Only use this in development/testing!
 
--- 1. CREATE TEST PLAYERS
+-- 1. TEMPORARILY DISABLE FOREIGN KEY CONSTRAINT
+alter table public.players drop constraint if exists players_user_id_fkey;
+
+-- 2. CREATE TEST PLAYERS
 -- These won't be able to sign in (no auth.users record)
 -- But they'll show up in the app for testing
 insert into public.players (user_id, discord_id, display_name, custom_name, avatar_url) values
@@ -22,7 +25,12 @@ insert into public.players (user_id, discord_id, display_name, custom_name, avat
   ('88888888-8888-8888-8888-888888888888', 'test008', 'Henry', null, null)
 on conflict (user_id) do nothing;
 
--- 2. CREATE SOME TEST VOTES
+-- 3. RE-ENABLE FOREIGN KEY CONSTRAINT
+alter table public.players 
+add constraint players_user_id_fkey 
+foreign key (user_id) references auth.users(id) on delete cascade;
+
+-- 4. CREATE SOME TEST VOTES
 -- Each player votes for a few others (realistic scenario)
 insert into public.votes (voter_id, target_id, score) values
   -- Alice's votes
