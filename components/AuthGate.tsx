@@ -110,38 +110,41 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
               </Link>
               <div className="hidden md:flex gap-4 items-center">
                 <Link href="/" className={`transition-colors ${pathname === '/' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
-                  🏠 Home
+                  Home
                 </Link>
                 
                 {/* Actions Group */}
                 <div className="h-4 w-px bg-white/20"></div>
                 <Link href="/rate" className={`transition-colors ${pathname === '/rate' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
-                  ⭐ Rate Players
+                  Rate Players
                 </Link>
+                
+                {/* Tools Group */}
+                <div className="h-4 w-px bg-white/20"></div>
                 <Link href="/balance" className={`transition-colors ${pathname === '/balance' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
-                  ⚖️ Team Balancer
+                  Team Balancer
                 </Link>
                 
                 {/* Data Group */}
                 <div className="h-4 w-px bg-white/20"></div>
                 <Link href="/scoreboard" className={`transition-colors ${pathname === '/scoreboard' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
-                  🏆 Scoreboard
+                  Scoreboard
                 </Link>
                 <Link href="/votes" className={`transition-colors ${pathname === '/votes' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
-                  🗳️ Vote Matrix
+                  All Votes
                 </Link>
                 <Link href="/history" className={`transition-colors ${pathname === '/history' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
-                  📜 History
+                  History
                 </Link>
                 
                 {/* Personal Group */}
                 <div className="h-4 w-px bg-white/20"></div>
                 <Link href="/profile" className={`transition-colors ${pathname === '/profile' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
-                  👤 Profile
+                  Profile
                 </Link>
                 {isAdmin && (
                   <Link href="/admin" className={`transition-colors font-semibold ${pathname === '/admin' ? 'text-yellow-300 border-b-2 border-yellow-300' : 'text-yellow-400 hover:text-yellow-300'}`}>
-                    ⚙️ Admin
+                    Admin
                   </Link>
                 )}
               </div>

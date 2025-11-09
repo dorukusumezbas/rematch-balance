@@ -141,7 +141,7 @@ export default function Home() {
         <CardContent className="space-y-2 text-slate-300 text-sm">
           <p>• <strong className="text-white">Be honest</strong> - Fair ratings lead to better balanced teams</p>
           <p>• <strong className="text-white">Update regularly</strong> - Player skills change over time</p>
-          <p>• <strong className="text-white">Check transparency</strong> - Everyone can see who voted what in the Vote Matrix page</p>
+          <p>• <strong className="text-white">Check transparency</strong> - Everyone can see who voted what in the All Votes page</p>
           <p>• <strong className="text-white">Use the balancer</strong> - Mark players online and let the algorithm create fair teams</p>
         </CardContent>
       </Card>
