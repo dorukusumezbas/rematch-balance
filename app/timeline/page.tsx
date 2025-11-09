@@ -169,7 +169,7 @@ export default function TimelinePage() {
   const calculateTimeline = (history: VoteHistory[], playerIds: string[], baselineVotes: any[]): TimelineDataPoint[] => {
     if (history.length === 0) return []
 
-    // Find the earliest vote in history to determine actual data range
+    // Find the earliest vote in history
     const sortedHistory = [...history].sort((a, b) => 
       new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
     )
@@ -177,24 +177,18 @@ export default function TimelinePage() {
     const endDate = Date.now()
     
     // Use the later of (earliest vote, selected time range start) as the actual start
+    // This prevents showing empty time before data exists
     const requestedStartDate = getTimeRangeDate(timeRange).getTime()
     const actualStartDate = Math.max(earliestVote, requestedStartDate)
-    const actualDataRange = endDate - actualStartDate
 
-    // Determine bucket size based on ACTUAL data range (not selected range)
+    // Determine bucket size based on SELECTED time range (for consistent granularity)
     const getBucketSize = (): number => {
-      const oneDayMs = 24 * 60 * 60 * 1000
-      const oneWeekMs = 7 * oneDayMs
-      const oneMonthMs = 30 * oneDayMs
-
-      if (actualDataRange <= oneDayMs) {
-        return 2 * 60 * 60 * 1000 // 2 hours for <= 1 day of data
-      } else if (actualDataRange <= oneWeekMs) {
-        return 12 * 60 * 60 * 1000 // 12 hours for <= 1 week of data
-      } else if (actualDataRange <= oneMonthMs) {
-        return 24 * 60 * 60 * 1000 // 1 day for <= 1 month of data
-      } else {
-        return 3 * 24 * 60 * 60 * 1000 // 3 days for > 1 month of data
+      switch (timeRange) {
+        case '1d': return 2 * 60 * 60 * 1000 // 2 hours
+        case '1w': return 6 * 60 * 60 * 1000 // 6 hours
+        case '1m': return 24 * 60 * 60 * 1000 // 1 day
+        case '3m': return 3 * 24 * 60 * 60 * 1000 // 3 days
+        default: return 24 * 60 * 60 * 1000
       }
     }
 
