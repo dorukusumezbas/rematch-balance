@@ -46,10 +46,19 @@ export default function ScoreboardPage() {
   }
 
   const getScoreColor = (score: number) => {
-    if (score >= 8) return 'text-green-500'
-    if (score >= 6) return 'text-blue-500'
-    if (score >= 4) return 'text-yellow-500'
-    return 'text-orange-500'
+    if (score >= 8.5) return 'text-green-500'
+    if (score >= 7) return 'text-blue-500'
+    if (score >= 5) return 'text-yellow-500'
+    if (score >= 2.5) return 'text-orange-500'
+    return 'text-red-500'
+  }
+
+  const getRankTitle = (score: number) => {
+    if (score >= 8.5) return { emoji: '👑', title: 'Kral', color: 'bg-green-600' }
+    if (score >= 7) return { emoji: '🎖️', title: 'Vezir', color: 'bg-blue-600' }
+    if (score >= 5) return { emoji: '⚔️', title: 'Komutan', color: 'bg-yellow-600' }
+    if (score >= 2.5) return { emoji: '🪓', title: 'Oduncu', color: 'bg-orange-600' }
+    return { emoji: '🗑️', title: 'Çöp', color: 'bg-red-700' }
   }
 
   if (loading) {
@@ -71,6 +80,7 @@ export default function ScoreboardPage() {
           const avgScore = typeof rating.avg_score === 'number' 
             ? rating.avg_score 
             : parseFloat(String(rating.avg_score))
+          const rankTitle = getRankTitle(avgScore)
 
           return (
             <Card 
@@ -99,7 +109,11 @@ export default function ScoreboardPage() {
                     <div className="font-semibold text-lg text-white">
                       {rating.display_name || 'Unknown Player'}
                     </div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className={`${rankTitle.color} px-2 py-0.5 rounded text-white text-xs font-semibold flex items-center gap-1`}>
+                        <span>{rankTitle.emoji}</span>
+                        <span>{rankTitle.title}</span>
+                      </div>
                       <Badge variant="secondary" className="text-xs">
                         {rating.voter_count} {rating.voter_count === 1 ? 'vote' : 'votes'}
                       </Badge>
