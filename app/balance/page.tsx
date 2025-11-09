@@ -576,19 +576,31 @@ export default function BalancePage() {
 
       {/* Balance Stats and Actions */}
       <Card className="bg-slate-800/50 border-slate-700">
-        <CardContent className="py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
+        <CardContent className="py-6 px-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="flex flex-wrap items-center gap-8">
               <div>
-                <div className="text-sm text-slate-400">Team Balance</div>
-                <div className="text-2xl font-bold text-white">
-                  {difference.toFixed(2)} point difference
+                <div className="text-sm text-slate-400 mb-1">Team 1 Total</div>
+                <div className="text-2xl font-bold text-blue-400">
+                  {team1Total.toFixed(2)}
                 </div>
               </div>
               <div>
-                <div className="text-sm text-slate-400">Players</div>
+                <div className="text-sm text-slate-400 mb-1">Team 2 Total</div>
+                <div className="text-2xl font-bold text-orange-400">
+                  {team2Total.toFixed(2)}
+                </div>
+              </div>
+              <div>
+                <div className="text-sm text-slate-400 mb-1">Difference</div>
+                <div className="text-2xl font-bold text-red-400">
+                  {difference.toFixed(2)}
+                </div>
+              </div>
+              <div>
+                <div className="text-sm text-slate-400 mb-1">Players</div>
                 <div className="text-2xl font-bold text-white">
-                  {team1.players.length}v{team2.players.length}
+                  {team1.players.length} vs {team2.players.length}
                 </div>
               </div>
             </div>
