@@ -84,15 +84,15 @@ export default function VotesPage() {
       </div>
 
       {players.length === 0 ? (
-        <Card>
+        <Card className="bg-slate-800/50 border-slate-700">
           <CardContent className="py-12 text-center">
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl text-white">
               No players yet. Start by signing in!
             </p>
           </CardContent>
         </Card>
       ) : (
-        <Card>
+        <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
             <CardTitle className="text-white">
               Votes Grid ({votes.length} total votes)
@@ -154,25 +154,25 @@ export default function VotesPage() {
               </table>
             </div>
             
-            <div className="mt-4 flex gap-4 text-xs text-muted-foreground">
+            <div className="mt-4 flex gap-4 text-xs text-slate-300">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded bg-green-600/20 border border-green-600/40"></div>
+                <div className="w-6 h-6 rounded bg-green-600"></div>
                 <span>8-10 (Pro)</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded bg-blue-600/20 border border-blue-600/40"></div>
+                <div className="w-6 h-6 rounded bg-blue-600"></div>
                 <span>6-7 (Good)</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded bg-yellow-600/20 border border-yellow-600/40"></div>
+                <div className="w-6 h-6 rounded bg-yellow-600"></div>
                 <span>4-5 (Average)</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded bg-orange-600/20 border border-orange-600/40"></div>
+                <div className="w-6 h-6 rounded bg-orange-600"></div>
                 <span>1-3 (Beginner)</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded bg-gray-800/30 border border-gray-700"></div>
+                <div className="w-6 h-6 rounded bg-slate-700"></div>
                 <span>? (Not voted)</span>
               </div>
             </div>
