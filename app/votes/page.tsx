@@ -213,19 +213,19 @@ export default function VotesPage() {
             <div className="mt-4 flex gap-4 text-xs text-slate-300">
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded bg-green-600"></div>
-                <span>8-10 (Pro)</span>
+                <span>≥ 8.00 (Pro)</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded bg-blue-600"></div>
-                <span>6-7 (Good)</span>
+                <span>≥ 6.00 (Good)</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded bg-yellow-600"></div>
-                <span>4-5 (Average)</span>
+                <span>≥ 4.00 (Average)</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded bg-orange-600"></div>
-                <span>1-3 (Beginner)</span>
+                <span>&lt; 4.00 (Beginner)</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded bg-slate-700"></div>
