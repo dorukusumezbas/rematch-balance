@@ -376,7 +376,7 @@ export default function BalancePage() {
                     className="p-3 bg-slate-700 rounded-lg border border-slate-600 cursor-move hover:bg-slate-600 transition-colors select-none"
                     style={{ userSelect: 'none', WebkitUserSelect: 'none' } as React.CSSProperties}
                   >
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <div className="text-white font-medium mb-1">
                           {getDisplayName(player)}
@@ -387,24 +387,6 @@ export default function BalancePage() {
                         </div>
                       </div>
                       <Badge>{player.avg_score.toFixed(2)}</Badge>
-                    </div>
-                    <div className="flex gap-2">
-                      <AppButton 
-                        onClick={() => moveToTeam1(player)}
-                        size="sm" 
-                        className="flex-1"
-                        variant="primary"
-                      >
-                        → Team 1
-                      </AppButton>
-                      <AppButton 
-                        onClick={() => moveToTeam2(player)}
-                        size="sm"
-                        className="flex-1"
-                        variant="warning"
-                      >
-                        → Team 2
-                      </AppButton>
                     </div>
                   </div>
                 ))
