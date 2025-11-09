@@ -214,28 +214,28 @@ export default function VotesPage() {
             
             <div className="mt-4 flex flex-wrap gap-3 text-xs text-slate-300">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded bg-green-600"></div>
-                <span>8.5-10 👑 Kral</span>
+                <div className="w-6 h-6 rounded bg-green-600 flex items-center justify-center text-base">👑</div>
+                <span>8.5-10 Kral</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded bg-blue-600"></div>
-                <span>7-8.5 🎖️ Vezir</span>
+                <div className="w-6 h-6 rounded bg-blue-600 flex items-center justify-center text-base">🎖️</div>
+                <span>7-8.5 Vezir</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded bg-yellow-600"></div>
-                <span>5-7 ⚔️ Komutan</span>
+                <div className="w-6 h-6 rounded bg-yellow-600 flex items-center justify-center text-base">⚔️</div>
+                <span>5-7 Komutan</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded bg-orange-600"></div>
-                <span>2.5-5 🪓 Oduncu</span>
+                <div className="w-6 h-6 rounded bg-orange-600 flex items-center justify-center text-base">🪓</div>
+                <span>2.5-5 Oduncu</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded bg-red-700"></div>
-                <span>0-2.5 🗑️ Çöp</span>
+                <div className="w-6 h-6 rounded bg-red-700 flex items-center justify-center text-base">🗑️</div>
+                <span>0-2.5 Çöp</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded bg-slate-700"></div>
-                <span>? (Not voted)</span>
+                <div className="w-6 h-6 rounded bg-slate-700 flex items-center justify-center text-sm text-slate-400">?</div>
+                <span>(Not voted)</span>
               </div>
             </div>
           </CardContent>
