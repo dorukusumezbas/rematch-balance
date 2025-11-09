@@ -216,6 +216,15 @@ export default function BalancePage() {
     return { emoji: '🗑️', title: 'Çöp', color: 'bg-red-700' }
   }
 
+  const getAvatarUrl = (player: PlayerWithScore) => {
+    if (player.avatar_url) {
+      if (player.avatar_url.startsWith('http')) {
+        return player.avatar_url
+      }
+    }
+    return null
+  }
+
   // Drag and drop handlers
   const handleDragStart = (e: React.DragEvent, player: PlayerWithScore, source: 'available' | 'team1' | 'team2') => {
     e.stopPropagation()
@@ -379,9 +388,20 @@ export default function BalancePage() {
                     className="p-3 bg-slate-700 rounded-lg border border-slate-600 cursor-move hover:bg-slate-600 transition-colors select-none"
                     style={{ userSelect: 'none', WebkitUserSelect: 'none' } as React.CSSProperties}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="text-white font-medium mb-1">
+                    <div className="flex items-center gap-2">
+                      {getAvatarUrl(player) ? (
+                        <img 
+                          src={getAvatarUrl(player)!} 
+                          alt={getDisplayName(player)}
+                          className="w-10 h-10 rounded-full flex-shrink-0"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm text-white flex-shrink-0">
+                          {(getDisplayName(player))[0].toUpperCase()}
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="text-white font-medium text-sm mb-1 truncate">
                           {getDisplayName(player)}
                         </div>
                         <div className={`${getRankTitle(player.avg_score).color} px-2 py-0.5 rounded text-white text-xs font-semibold inline-flex items-center gap-1`}>
@@ -389,7 +409,7 @@ export default function BalancePage() {
                           <span>{getRankTitle(player.avg_score).title}</span>
                         </div>
                       </div>
-                      <Badge>{player.avg_score.toFixed(2)}</Badge>
+                      <Badge className="flex-shrink-0">{player.avg_score.toFixed(2)}</Badge>
                     </div>
                   </div>
                 ))
@@ -429,9 +449,20 @@ export default function BalancePage() {
                     className="p-3 bg-blue-800/30 rounded-lg border border-blue-500/50 cursor-move hover:bg-blue-800/50 transition-colors select-none"
                     style={{ userSelect: 'none', WebkitUserSelect: 'none' } as React.CSSProperties}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="text-white font-medium mb-1">
+                    <div className="flex items-center gap-2">
+                      {getAvatarUrl(player) ? (
+                        <img 
+                          src={getAvatarUrl(player)!} 
+                          alt={getDisplayName(player)}
+                          className="w-10 h-10 rounded-full flex-shrink-0"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm text-white flex-shrink-0">
+                          {(getDisplayName(player))[0].toUpperCase()}
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="text-white font-medium text-sm mb-1 truncate">
                           {getDisplayName(player)}
                         </div>
                         <div className="flex items-center gap-2">
@@ -448,6 +479,7 @@ export default function BalancePage() {
                         onClick={() => removeFromTeam1(player)}
                         variant="danger"
                         size="sm"
+                        className="flex-shrink-0"
                       >
                         ✕
                       </AppButton>
@@ -490,9 +522,20 @@ export default function BalancePage() {
                     className="p-3 bg-orange-800/30 rounded-lg border border-orange-500/50 cursor-move hover:bg-orange-800/50 transition-colors select-none"
                     style={{ userSelect: 'none', WebkitUserSelect: 'none' } as React.CSSProperties}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="text-white font-medium mb-1">
+                    <div className="flex items-center gap-2">
+                      {getAvatarUrl(player) ? (
+                        <img 
+                          src={getAvatarUrl(player)!} 
+                          alt={getDisplayName(player)}
+                          className="w-10 h-10 rounded-full flex-shrink-0"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm text-white flex-shrink-0">
+                          {(getDisplayName(player))[0].toUpperCase()}
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="text-white font-medium text-sm mb-1 truncate">
                           {getDisplayName(player)}
                         </div>
                         <div className="flex items-center gap-2">
@@ -509,6 +552,7 @@ export default function BalancePage() {
                         onClick={() => removeFromTeam2(player)}
                         variant="danger"
                         size="sm"
+                        className="flex-shrink-0"
                       >
                         ✕
                       </AppButton>
