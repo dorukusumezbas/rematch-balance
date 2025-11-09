@@ -40,6 +40,22 @@ export default function Home() {
       <Card className="hover:shadow-lg transition-shadow">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
+            ⚖️ Team Balancer
+          </CardTitle>
+          <CardDescription>
+            Create balanced teams for your matches
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Link href="/balance">
+            <Button className="w-full">Balance Teams</Button>
+          </Link>
+        </CardContent>
+      </Card>
+
+      <Card className="hover:shadow-lg transition-shadow">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
             🗳️ All Votes
           </CardTitle>
           <CardDescription>

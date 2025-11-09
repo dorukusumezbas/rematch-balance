@@ -104,6 +104,9 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 <a href="/scoreboard" className="text-white/80 hover:text-white transition-colors">
                   Scoreboard
                 </a>
+                <a href="/balance" className="text-white/80 hover:text-white transition-colors">
+                  Balance Teams
+                </a>
                 <a href="/votes" className="text-white/80 hover:text-white transition-colors">
                   All Votes
                 </a>
