@@ -113,22 +113,8 @@ export default function ProfilePage() {
           </div>
 
           <div className="pt-4 border-t">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">Currently showing as:</p>
-                <p className="text-2xl font-bold text-primary mt-1">{displayName}</p>
-              </div>
-              <Button 
-                onClick={handleSave} 
-                disabled={saving}
-                size="lg"
-              >
-                {saving ? 'Saving...' : 'Save Changes'}
-              </Button>
-            </div>
-            {successMessage && (
-              <p className="text-green-500 text-sm mt-2">{successMessage}</p>
-            )}
+            <p className="text-sm font-medium text-white">Currently showing as:</p>
+            <p className="text-2xl font-bold text-primary mt-1">{displayName}</p>
           </div>
         </CardContent>
       </Card>
@@ -163,12 +149,37 @@ export default function ProfilePage() {
         </CardContent>
       </Card>
 
-      <Card className="bg-primary/5 border-primary/20">
+      <Card className="bg-primary/5 border-primary/20 mb-6">
         <CardContent className="py-4">
           <p className="text-sm text-muted-foreground">
             💡 <strong>Tip:</strong> Your custom name will appear on the scoreboard, 
             rating page, and anywhere your profile is shown. Choose something memorable!
           </p>
+        </CardContent>
+      </Card>
+
+      {/* Save Section */}
+      <Card className="bg-slate-800/50 border-slate-700">
+        <CardContent className="py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-white font-medium text-lg mb-1">Ready to save your changes?</p>
+              <p className="text-sm text-slate-400">
+                This will update your display name and rematch player status
+              </p>
+            </div>
+            <Button 
+              onClick={handleSave} 
+              disabled={saving}
+              size="lg"
+              className="bg-primary hover:bg-primary/90 text-white"
+            >
+              {saving ? 'Saving...' : 'Save All Changes'}
+            </Button>
+          </div>
+          {successMessage && (
+            <p className="text-green-400 text-sm mt-4 text-center font-medium">{successMessage}</p>
+          )}
         </CardContent>
       </Card>
     </div>
