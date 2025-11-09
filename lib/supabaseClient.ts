@@ -35,6 +35,7 @@ export type PlayerRating = {
   player_id: string;
   display_name: string | null; // Uses custom_name if set, otherwise discord name
   avatar_url: string | null;
+  plays_rematch: boolean; // Whether player actively plays rematch
   avg_score: number; // Average of all votes (0 if no votes)
   voter_count: number; // Number of votes received
 };

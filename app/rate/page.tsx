@@ -27,11 +27,12 @@ export default function RatePage() {
 
     setCurrentUserId(user.id)
 
-    // Load all players except current user
+    // Load all players except current user (only rematch players)
     const { data: playersData, error: playersError } = await supabase
       .from('players')
       .select('*')
       .neq('user_id', user.id)
+      .eq('plays_rematch', true)
       .order('display_name')
 
     if (playersError) {

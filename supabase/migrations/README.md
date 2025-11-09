@@ -19,6 +19,7 @@ This folder contains all database schema changes in chronological order.
 | 004 | `004_change_score_to_decimal.sql` | Change score from integer to decimal (0.25 granularity) | ⏳       |
 | 005 | `005_fix_score_precision.sql`     | Fix score precision numeric(3,2) → numeric(4,2) for 10.00 support | ⏳       |
 | 006 | `006_add_plays_rematch_and_admin.sql` | Add plays_rematch and is_admin flags with admin RLS policies | ⏳       |
+| 007 | `007_update_view_for_rematch_filter.sql` | Update player_ratings view to include plays_rematch field | ⏳       |
 
 ## Creating New Migrations
 

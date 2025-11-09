@@ -17,6 +17,7 @@ export default function ScoreboardPage() {
     const { data, error } = await supabase
       .from('player_ratings')
       .select('*')
+      .eq('plays_rematch', true) // Only show active rematch players
       .order('avg_score', { ascending: false })
 
     if (error) {

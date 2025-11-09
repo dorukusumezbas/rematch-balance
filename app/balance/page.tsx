@@ -39,10 +39,11 @@ export default function BalancePage() {
   }, [allPlayers, team1.players, team2.players])
 
   const loadPlayers = async () => {
-    // Get all players with their ratings
+    // Get all players with their ratings (only rematch players)
     const { data: ratingsData, error } = await supabase
       .from('player_ratings')
       .select('*')
+      .eq('plays_rematch', true)
       .order('avg_score', { ascending: false })
 
     if (error) {
@@ -50,10 +51,11 @@ export default function BalancePage() {
       return
     }
 
-    // Get full player data
+    // Get full player data (only rematch players)
     const { data: playersData } = await supabase
       .from('players')
       .select('*')
+      .eq('plays_rematch', true)
 
     const playersMap = new Map(playersData?.map(p => [p.user_id, p]) || [])
 

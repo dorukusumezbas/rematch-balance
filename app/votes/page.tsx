@@ -19,10 +19,11 @@ export default function VotesPage() {
   }, [])
 
   const loadAllVotes = async () => {
-    // Get all players
+    // Get all players (only rematch players)
     const { data: playersData } = await supabase
       .from('players')
       .select('*')
+      .eq('plays_rematch', true)
       .order('display_name')
 
     // Get all votes
@@ -38,12 +39,14 @@ export default function VotesPage() {
     // Create player lookup map
     const playersMap = new Map(playersData.map(p => [p.user_id, p]))
 
-    // Enrich votes with player names
-    const enrichedVotes = votesData.map(v => ({
-      ...v,
-      voter: playersMap.get(v.voter_id),
-      target: playersMap.get(v.target_id)
-    }))
+    // Filter votes to only include those between rematch players
+    const enrichedVotes = votesData
+      .filter(v => playersMap.has(v.voter_id) && playersMap.has(v.target_id))
+      .map(v => ({
+        ...v,
+        voter: playersMap.get(v.voter_id),
+        target: playersMap.get(v.target_id)
+      }))
 
     setVotes(enrichedVotes)
     setPlayers(playersData)
