@@ -38,7 +38,7 @@ export default function ProfilePage() {
 
     setDiscordName(playerData.display_name || user.user_metadata.full_name || 'Unknown')
     setCustomName(playerData.custom_name || '')
-    setPlaysRematch(playerData.plays_rematch !== false) // Default to true if not set
+    setPlaysRematch(playerData.plays_rematch !== false)
     setLoading(false)
   }
 
@@ -59,12 +59,12 @@ export default function ProfilePage() {
     setSaving(false)
 
     if (error) {
-      console.error('Error updating name:', error)
-      alert('Error saving name. Please try again.')
+      console.error('Error updating profile:', error)
+      alert('Error saving profile. Please try again.')
       return
     }
 
-    setSuccessMessage('✓ Name saved successfully!')
+    setSuccessMessage('✓ Profile saved successfully!')
     setTimeout(() => setSuccessMessage(''), 3000)
   }
 
@@ -72,117 +72,83 @@ export default function ProfilePage() {
     return <div className="text-white text-center">Loading profile...</div>
   }
 
-  const displayName = customName || discordName
-
   return (
     <div className="max-w-2xl mx-auto">
       <h1 className="text-3xl font-bold text-white mb-6">Profile Settings</h1>
 
-      <Card className="mb-6">
+      <Card className="bg-slate-800/50 border-slate-700">
         <CardHeader>
-          <CardTitle>Display Name</CardTitle>
+          <CardTitle className="text-white">Your Profile</CardTitle>
           <CardDescription>
-            Choose how other players see your name in the app
+            Update your display name and rematch status
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
+          {/* Discord Name (read-only) */}
           <div>
-            <label className="block text-sm font-medium mb-2">
-              Discord Name (from your account)
+            <label className="block text-sm font-medium text-white mb-2">
+              Discord Name
             </label>
-            <div className="px-4 py-2 bg-muted rounded-md text-muted-foreground">
+            <div className="px-4 py-2.5 bg-slate-700/50 rounded-md text-slate-300 border border-slate-600">
               {discordName}
             </div>
           </div>
 
+          {/* Custom Name */}
           <div>
-            <label className="block text-sm font-medium mb-2">
-              Custom Display Name (optional)
+            <label className="block text-sm font-medium text-white mb-2">
+              Custom Display Name <span className="text-slate-400 font-normal">(optional)</span>
             </label>
             <input
               type="text"
               value={customName}
               onChange={(e) => setCustomName(e.target.value)}
-              placeholder="Enter your preferred name..."
+              placeholder="Leave empty to use Discord name"
               maxLength={50}
-              className="w-full px-4 py-2 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full px-4 py-2.5 rounded-md border border-slate-600 bg-slate-700/50 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             />
-            <p className="text-xs text-muted-foreground mt-1">
-              Leave empty to use your Discord name
-            </p>
           </div>
 
-          <div className="pt-4 border-t">
-            <p className="text-sm font-medium text-white">Currently showing as:</p>
-            <p className="text-2xl font-bold text-primary mt-1">{displayName}</p>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6 bg-slate-800/50 border-slate-700">
-        <CardHeader>
-          <CardTitle>Rematch Player Status</CardTitle>
-          <CardDescription>
-            Toggle whether you actively play rematch games
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-white">I play rematch games</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                {playsRematch ? 
-                  'You will appear in scoreboard, balancer, and voting pages' : 
-                  'You will be hidden from active player lists (view-only access)'}
-              </p>
+          {/* Rematch Status Toggle */}
+          <div className="pt-4 border-t border-slate-600">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-white mb-1">Active Rematch Player</p>
+                <p className="text-sm text-slate-400">
+                  {playsRematch ? 
+                    'Visible in scoreboard, voting, and balancer' : 
+                    'Hidden from active lists (view-only)'}
+                </p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={playsRematch}
+                  onChange={(e) => setPlaysRematch(e.target.checked)}
+                  className="sr-only peer"
+                />
+                <div className="w-14 h-7 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+              </label>
             </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={playsRematch}
-                onChange={(e) => setPlaysRematch(e.target.checked)}
-                className="sr-only peer"
-              />
-              <div className="w-14 h-7 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
-            </label>
           </div>
-        </CardContent>
-      </Card>
 
-      <Card className="bg-primary/5 border-primary/20 mb-6">
-        <CardContent className="py-4">
-          <p className="text-sm text-muted-foreground">
-            💡 <strong>Tip:</strong> Your custom name will appear on the scoreboard, 
-            rating page, and anywhere your profile is shown. Choose something memorable!
-          </p>
-        </CardContent>
-      </Card>
-
-      {/* Save Section */}
-      <Card className="bg-slate-800/50 border-slate-700">
-        <CardContent className="py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-white font-medium text-lg mb-1">Ready to save your changes?</p>
-              <p className="text-sm text-slate-400">
-                This will update your display name and rematch player status
-              </p>
-            </div>
+          {/* Save Button */}
+          <div className="pt-4">
             <AppButton 
               onClick={handleSave} 
               disabled={saving}
               size="lg"
               variant="primary"
+              fullWidth
             >
-              {saving ? 'Saving...' : 'Save All Changes'}
+              {saving ? 'Saving...' : 'Save Changes'}
             </AppButton>
+            {successMessage && (
+              <p className="text-green-400 text-sm mt-3 text-center font-medium">{successMessage}</p>
+            )}
           </div>
-          {successMessage && (
-            <p className="text-green-400 text-sm mt-4 text-center font-medium">{successMessage}</p>
-          )}
         </CardContent>
       </Card>
     </div>
   )
 }
-
