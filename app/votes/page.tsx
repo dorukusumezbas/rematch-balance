@@ -9,9 +9,13 @@ type VoteWithNames = Vote & {
   target?: Player
 }
 
+type PlayerWithAvg = Player & {
+  avg_score: number
+}
+
 export default function VotesPage() {
   const [votes, setVotes] = useState<VoteWithNames[]>([])
-  const [players, setPlayers] = useState<Player[]>([])
+  const [players, setPlayers] = useState<PlayerWithAvg[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -19,25 +23,38 @@ export default function VotesPage() {
   }, [])
 
   const loadAllVotes = async () => {
-    // Get all players (only rematch players)
+    // Get all players with their avg scores (only rematch players)
+    const { data: ratingsData } = await supabase
+      .from('player_ratings')
+      .select('*')
+      .eq('plays_rematch', true)
+      .order('display_name')
+
+    // Get full player data
     const { data: playersData } = await supabase
       .from('players')
       .select('*')
       .eq('plays_rematch', true)
-      .order('display_name')
 
     // Get all votes
     const { data: votesData } = await supabase
       .from('votes')
       .select('*')
 
-    if (!playersData || !votesData) {
+    if (!playersData || !votesData || !ratingsData) {
       setLoading(false)
       return
     }
 
-    // Create player lookup map
+    // Create player lookup map with avg scores
+    const ratingsMap = new Map(ratingsData.map(r => [r.player_id, r.avg_score]))
     const playersMap = new Map(playersData.map(p => [p.user_id, p]))
+    
+    // Merge players with their avg scores
+    const playersWithAvg: PlayerWithAvg[] = playersData.map(p => ({
+      ...p,
+      avg_score: ratingsMap.get(p.user_id) || 0
+    })).sort((a, b) => (a.custom_name || a.display_name || '').localeCompare(b.custom_name || b.display_name || ''))
 
     // Filter votes to only include those between rematch players
     const enrichedVotes = votesData
@@ -49,7 +66,7 @@ export default function VotesPage() {
       }))
 
     setVotes(enrichedVotes)
-    setPlayers(playersData)
+    setPlayers(playersWithAvg)
     setLoading(false)
   }
 
@@ -66,8 +83,15 @@ export default function VotesPage() {
     return 'bg-orange-600 text-white font-bold'
   }
 
-  const getDisplayName = (player: Player) => {
+  const getDisplayName = (player: PlayerWithAvg) => {
     return player.custom_name || player.display_name || 'Unknown'
+  }
+
+  const getAvgScoreColor = (avg: number) => {
+    if (avg >= 8) return 'text-green-400'
+    if (avg >= 6) return 'text-blue-400'
+    if (avg >= 4) return 'text-yellow-400'
+    return 'text-orange-400'
   }
 
   if (loading) {
@@ -109,11 +133,14 @@ export default function VotesPage() {
                     {players.map(target => (
                       <th 
                         key={target.user_id} 
-                        className="p-3 border border-slate-600 text-center text-white text-sm font-semibold min-w-[100px] bg-slate-800"
-                        title={getDisplayName(target)}
+                        className="p-3 border border-slate-600 text-center text-sm font-semibold min-w-[100px] bg-slate-800"
+                        title={`${getDisplayName(target)} - Avg: ${target.avg_score.toFixed(2)}`}
                       >
-                        <div className="truncate max-w-[100px]">
+                        <div className="truncate max-w-[100px] text-white">
                           {getDisplayName(target)}
+                        </div>
+                        <div className={`text-xs font-bold mt-1 ${getAvgScoreColor(target.avg_score)}`}>
+                          {target.avg_score.toFixed(2)}
                         </div>
                       </th>
                     ))}
@@ -122,9 +149,12 @@ export default function VotesPage() {
                 <tbody>
                   {players.map(voter => (
                     <tr key={voter.user_id} className="hover:bg-slate-700/30">
-                      <td className="sticky left-0 bg-slate-800 z-10 p-3 border border-slate-600 font-semibold text-white">
-                        <div className="truncate max-w-[150px]" title={getDisplayName(voter)}>
-                          {getDisplayName(voter)}
+                      <td className="sticky left-0 bg-slate-800 z-10 p-3 border border-slate-600">
+                        <div className="truncate max-w-[150px]" title={`${getDisplayName(voter)} - Avg: ${voter.avg_score.toFixed(2)}`}>
+                          <div className="font-semibold text-white">{getDisplayName(voter)}</div>
+                          <div className={`text-xs font-bold ${getAvgScoreColor(voter.avg_score)}`}>
+                            {voter.avg_score.toFixed(2)}
+                          </div>
                         </div>
                       </td>
                       {players.map(target => {
