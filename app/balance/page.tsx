@@ -172,7 +172,12 @@ export default function BalancePage() {
     currentTotal1: number,
     currentTotal2: number
   ) => {
-    // Sort players by score descending
+    // For small player counts, try all combinations to find optimal balance
+    if (players.length <= 12) {
+      return optimalBalance(players, need1, need2, currentTotal1, currentTotal2)
+    }
+
+    // For larger groups, use greedy (fast but suboptimal)
     const sorted = [...players].sort((a, b) => b.avg_score - a.avg_score)
     const team1: PlayerWithScore[] = []
     const team2: PlayerWithScore[] = []
@@ -181,7 +186,6 @@ export default function BalancePage() {
 
     for (const player of sorted) {
       if (team1.length < need1 && team2.length < need2) {
-        // Both teams need players, add to weaker team
         if (total1 <= total2) {
           team1.push(player)
           total1 += player.avg_score
@@ -199,6 +203,52 @@ export default function BalancePage() {
     }
 
     return { team1, team2 }
+  }
+
+  const optimalBalance = (
+    players: PlayerWithScore[], 
+    need1: number, 
+    need2: number,
+    currentTotal1: number,
+    currentTotal2: number
+  ) => {
+    // Try all possible combinations and pick the one with minimum difference
+    let bestDiff = Infinity
+    let bestTeam1: PlayerWithScore[] = []
+    let bestTeam2: PlayerWithScore[] = []
+
+    // Generate all combinations of choosing need1 players for team1
+    const getCombinations = (arr: PlayerWithScore[], size: number): PlayerWithScore[][] => {
+      if (size === 0) return [[]]
+      if (arr.length === 0) return []
+      
+      const [first, ...rest] = arr
+      const withFirst = getCombinations(rest, size - 1).map(combo => [first, ...combo])
+      const withoutFirst = getCombinations(rest, size)
+      return [...withFirst, ...withoutFirst]
+    }
+
+    const combinations = getCombinations(players, need1)
+
+    for (const team1Combo of combinations) {
+      // team2 is everyone else
+      const team1Ids = new Set(team1Combo.map(p => p.user_id))
+      const team2Combo = players.filter(p => !team1Ids.has(p.user_id))
+
+      if (team2Combo.length !== need2) continue
+
+      const total1 = currentTotal1 + team1Combo.reduce((sum, p) => sum + p.avg_score, 0)
+      const total2 = currentTotal2 + team2Combo.reduce((sum, p) => sum + p.avg_score, 0)
+      const diff = Math.abs(total1 - total2)
+
+      if (diff < bestDiff) {
+        bestDiff = diff
+        bestTeam1 = team1Combo
+        bestTeam2 = team2Combo
+      }
+    }
+
+    return { team1: bestTeam1, team2: bestTeam2 }
   }
 
   const resetAll = () => {
