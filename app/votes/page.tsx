@@ -100,16 +100,16 @@ export default function VotesPage() {
               <table className="w-full border-collapse">
                 <thead>
                   <tr>
-                    <th className="sticky left-0 bg-card z-10 p-2 border border-border text-left text-white font-semibold min-w-[140px]">
+                    <th className="sticky left-0 bg-slate-800 z-10 p-3 border border-slate-600 text-left text-white font-bold min-w-[150px]">
                       Voter → Target
                     </th>
                     {players.map(target => (
                       <th 
                         key={target.user_id} 
-                        className="p-2 border border-border text-center text-white text-xs font-medium min-w-[80px]"
+                        className="p-3 border border-slate-600 text-center text-white text-sm font-semibold min-w-[100px] bg-slate-800"
                         title={getDisplayName(target)}
                       >
-                        <div className="truncate max-w-[80px]">
+                        <div className="truncate max-w-[100px]">
                           {getDisplayName(target)}
                         </div>
                       </th>
@@ -118,9 +118,9 @@ export default function VotesPage() {
                 </thead>
                 <tbody>
                   {players.map(voter => (
-                    <tr key={voter.user_id} className="hover:bg-accent/5">
-                      <td className="sticky left-0 bg-card z-10 p-2 border border-border font-medium text-white">
-                        <div className="truncate max-w-[140px]" title={getDisplayName(voter)}>
+                    <tr key={voter.user_id} className="hover:bg-slate-700/30">
+                      <td className="sticky left-0 bg-slate-800 z-10 p-3 border border-slate-600 font-semibold text-white">
+                        <div className="truncate max-w-[150px]" title={getDisplayName(voter)}>
                           {getDisplayName(voter)}
                         </div>
                       </td>
@@ -131,14 +131,14 @@ export default function VotesPage() {
                         return (
                           <td 
                             key={target.user_id} 
-                            className={`p-2 border border-border text-center ${
-                              isSelf ? 'bg-gray-900/50' : ''
+                            className={`p-3 border border-slate-600 text-center ${
+                              isSelf ? 'bg-slate-900/50' : 'bg-slate-900/20'
                             }`}
                           >
                             {isSelf ? (
-                              <div className="text-gray-600 text-xs">-</div>
+                              <div className="text-gray-500 text-sm font-medium">-</div>
                             ) : (
-                              <div className={`text-sm py-1 px-2 rounded ${getScoreColor(score)}`}>
+                              <div className={`text-base py-2 px-3 rounded ${getScoreColor(score)}`}>
                                 {score || '?'}
                               </div>
                             )}
