@@ -216,17 +216,17 @@ export default function RatePage() {
                 {/* Slider */}
                 <div className={`mb-3 ${!savedScore && !pendingScore ? 'opacity-50' : ''}`}>
                   <Slider
-                    min={1}
+                    min={0}
                     max={10}
                     step={0.25}
-                    value={currentScore || 5.5}
+                    value={currentScore || 5.0}
                     onValueChange={(value) => handleVoteChange(player.user_id, value)}
                     disabled={isSaving}
                     className="mb-1"
                   />
                   <div className="flex justify-between text-xs text-muted-foreground px-1">
-                    <span>1.0</span>
-                    <span>5.5</span>
+                    <span>0.0</span>
+                    <span>5.0</span>
                     <span>10.0</span>
                   </div>
                 </div>
