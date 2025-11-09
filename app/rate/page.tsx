@@ -104,6 +104,46 @@ export default function RatePage() {
     }
   }
 
+  const saveAll = async () => {
+    if (!currentUserId || pendingChanges.size === 0) return
+
+    // Mark all as saving
+    const allIds = Array.from(pendingChanges.keys())
+    setSavingIds(new Set(allIds))
+
+    // Prepare all upserts
+    const votesToSave = Array.from(pendingChanges.entries()).map(([targetId, score]) => ({
+      voter_id: currentUserId,
+      target_id: targetId,
+      score: score,
+    }))
+
+    const { error } = await supabase
+      .from('votes')
+      .upsert(votesToSave, {
+        onConflict: 'voter_id,target_id'
+      })
+
+    // Done saving
+    setSavingIds(new Set())
+
+    if (error) {
+      console.error('Error saving votes:', error)
+      alert('Error saving votes. Please try again.')
+    } else {
+      // Update saved votes
+      setMyVotes(prev => {
+        const newMap = new Map(prev)
+        pendingChanges.forEach((score, targetId) => {
+          newMap.set(targetId, score)
+        })
+        return newMap
+      })
+      // Clear all pending changes
+      setPendingChanges(new Map())
+    }
+  }
+
   const getAvatarUrl = (player: Player) => {
     if (player.avatar_url) {
       // Discord CDN URLs
@@ -134,14 +174,26 @@ export default function RatePage() {
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2">
           <h1 className="text-3xl font-bold text-white">Rate Players</h1>
-          {unratedCount < players.length && (
-            <AppButton
-              onClick={() => setHideRated(!hideRated)}
-              variant="secondary"
-            >
-              {hideRated ? 'Show All' : 'Hide Rated'}
-            </AppButton>
-          )}
+          <div className="flex gap-3">
+            {totalPendingCount > 0 && (
+              <AppButton
+                onClick={saveAll}
+                disabled={savingIds.size > 0}
+                variant="success"
+                size="lg"
+              >
+                💾 Save All ({totalPendingCount})
+              </AppButton>
+            )}
+            {unratedCount < players.length && (
+              <AppButton
+                onClick={() => setHideRated(!hideRated)}
+                variant="secondary"
+              >
+                {hideRated ? 'Show All' : 'Hide Rated'}
+              </AppButton>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-3">
           <p className="text-white/70">
