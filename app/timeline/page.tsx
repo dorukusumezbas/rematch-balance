@@ -490,8 +490,9 @@ export default function TimelinePage() {
                   content={({ active, payload, label }) => {
                     if (!active || !payload || payload.length === 0) return null
                     
-                    const data = payload[0].payload
-                    const timestamp = data.timestamp
+                    // Find the actual data point from timelineData using the label
+                    const dataPoint = timelineData.find(d => d.date === label)
+                    if (!dataPoint) return null
                     
                     return (
                       <div style={{
@@ -508,7 +509,7 @@ export default function TimelinePage() {
                           marginBottom: '8px',
                           fontSize: '13px'
                         }}>
-                          {new Date(timestamp).toLocaleString('en-US', {
+                          {new Date(dataPoint.timestamp).toLocaleString('en-US', {
                             month: 'short',
                             day: 'numeric',
                             hour: '2-digit',
@@ -519,7 +520,7 @@ export default function TimelinePage() {
                           const playerId = entry.dataKey
                           const player = players.find(p => p.user_id === playerId)
                           const displayName = player ? getDisplayName(player) : 'Unknown'
-                          const value = data[playerId]
+                          const value = dataPoint[playerId]
                           
                           return (
                             <div key={index} style={{
