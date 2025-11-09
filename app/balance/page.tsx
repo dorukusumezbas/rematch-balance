@@ -217,15 +217,29 @@ export default function BalancePage() {
     let bestTeam1: PlayerWithScore[] = []
     let bestTeam2: PlayerWithScore[] = []
 
-    // Generate all combinations of choosing need1 players for team1
+    // Generate all combinations using iterative approach
     const getCombinations = (arr: PlayerWithScore[], size: number): PlayerWithScore[][] => {
       if (size === 0) return [[]]
-      if (arr.length === 0) return []
+      if (size > arr.length) return []
+      if (size === arr.length) return [arr]
       
-      const [first, ...rest] = arr
-      const withFirst = getCombinations(rest, size - 1).map(combo => [first, ...combo])
-      const withoutFirst = getCombinations(rest, size)
-      return [...withFirst, ...withoutFirst]
+      const result: PlayerWithScore[][] = []
+      
+      function backtrack(start: number, current: PlayerWithScore[]) {
+        if (current.length === size) {
+          result.push([...current])
+          return
+        }
+        
+        for (let i = start; i < arr.length; i++) {
+          current.push(arr[i])
+          backtrack(i + 1, current)
+          current.pop()
+        }
+      }
+      
+      backtrack(0, [])
+      return result
     }
 
     const combinations = getCombinations(players, need1)
