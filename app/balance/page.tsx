@@ -362,7 +362,7 @@ export default function BalancePage() {
             onDragOver={handleDragOver}
             onDrop={handleDropToAvailable}
           >
-            <div className="space-y-2 min-h-[200px]">
+            <div className="space-y-2 min-h-[400px]">
               {availablePlayers.length === 0 ? (
                 <p className="text-slate-400 text-center py-8">No players available</p>
               ) : (
@@ -411,7 +411,7 @@ export default function BalancePage() {
             onDragOver={handleDragOver}
             onDrop={handleDropToTeam1}
           >
-            <div className="space-y-2 min-h-[200px]">
+            <div className="space-y-2 min-h-[400px]">
               {team1.players.length === 0 ? (
                 <p className="text-slate-400 text-center py-8">Drop players here</p>
               ) : (
@@ -471,7 +471,7 @@ export default function BalancePage() {
             onDragOver={handleDragOver}
             onDrop={handleDropToTeam2}
           >
-            <div className="space-y-2 min-h-[200px]">
+            <div className="space-y-2 min-h-[400px]">
               {team2.players.length === 0 ? (
                 <p className="text-slate-400 text-center py-8">Drop players here</p>
               ) : (
