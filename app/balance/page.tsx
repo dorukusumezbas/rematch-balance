@@ -576,8 +576,8 @@ export default function BalancePage() {
 
       {/* Balance Stats and Actions */}
       <Card className="bg-slate-800/50 border-slate-700">
-        <CardContent className="flex items-center py-6 px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 w-full">
+        <CardContent className="p-6 pt-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-8">
               <div className="text-center md:text-left">
                 <div className="text-sm text-slate-400 mb-1">Team 1 Total</div>
