@@ -11,10 +11,11 @@ This folder contains all database schema changes in chronological order.
 
 ## Migration History
 
-| # | File | Description | Applied? |
-|---|------|-------------|----------|
-| 001 | `001_initial_schema.sql` | Initial database setup with players, votes, and ratings | ✅ |
-| 002 | `002_add_custom_names.sql` | Add custom_name field to players table | ✅ |
+| #   | File                       | Description                                             | Applied? |
+| --- | -------------------------- | ------------------------------------------------------- | -------- |
+| 001 | `001_initial_schema.sql`   | Initial database setup with players, votes, and ratings | ✅       |
+| 002 | `002_add_custom_names.sql` | Add custom_name field to players table                  | ✅       |
+| 003 | `003_add_vote_history.sql` | Add vote_history table with automatic logging trigger   | ⏳       |
 
 ## Creating New Migrations
 
@@ -36,7 +37,7 @@ When you need to change the database:
 ALTER TABLE players ADD COLUMN new_field text;
 
 -- Always check if things exist before creating
-CREATE INDEX IF NOT EXISTS idx_players_new_field 
+CREATE INDEX IF NOT EXISTS idx_players_new_field
 ON players(new_field);
 ```
 
@@ -47,4 +48,3 @@ ON players(new_field);
 - ✅ **DO**: Test migrations on a copy first
 - ❌ **DON'T**: Modify old migrations after they're applied
 - ❌ **DON'T**: Delete migrations from git history
-

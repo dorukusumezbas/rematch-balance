@@ -10,11 +10,11 @@ import { Button } from '@/components/ui/button'
 export default function RatePage() {
   const [players, setPlayers] = useState<Player[]>([])
   const [myVotes, setMyVotes] = useState<Map<string, number>>(new Map())
+  const [pendingChanges, setPendingChanges] = useState<Map<string, number>>(new Map())
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [hideRated, setHideRated] = useState(false)
-  const [pendingVotes, setPendingVotes] = useState<Map<string, number>>(new Map())
-  const [saveTimeouts, setSaveTimeouts] = useState<Map<string, NodeJS.Timeout>>(new Map())
+  const [savingIds, setSavingIds] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     loadData()
@@ -61,39 +61,15 @@ export default function RatePage() {
   }
 
   const handleVoteChange = (targetId: string, score: number) => {
-    // Update local state immediately
-    setMyVotes(prev => new Map(prev).set(targetId, score))
-    
-    // Mark as pending
-    setPendingVotes(prev => new Map(prev).set(targetId, score))
-    
-    // Clear any existing timeout for this player
-    setSaveTimeouts(prev => {
-      const existingTimeout = prev.get(targetId)
-      if (existingTimeout) {
-        clearTimeout(existingTimeout)
-      }
-      
-      // Create new timeout for debounced save
-      const newTimeout = setTimeout(() => {
-        saveVote(targetId, score)
-        // Clean up timeout reference after save
-        setSaveTimeouts(current => {
-          const updated = new Map(current)
-          updated.delete(targetId)
-          return updated
-        })
-      }, 300)
-      
-      // Store the new timeout
-      const updated = new Map(prev)
-      updated.set(targetId, newTimeout)
-      return updated
-    })
+    // Mark as having unsaved changes
+    setPendingChanges(prev => new Map(prev).set(targetId, score))
   }
 
   const saveVote = async (targetId: string, score: number) => {
     if (!currentUserId) return
+
+    // Mark as saving
+    setSavingIds(prev => new Set(prev).add(targetId))
 
     const { error } = await supabase
       .from('votes')
@@ -105,12 +81,21 @@ export default function RatePage() {
         onConflict: 'voter_id,target_id'
       })
 
+    // Done saving
+    setSavingIds(prev => {
+      const newSet = new Set(prev)
+      newSet.delete(targetId)
+      return newSet
+    })
+
     if (error) {
       console.error('Error saving vote:', error)
       alert('Error saving vote. Please try again.')
     } else {
-      // Remove from pending
-      setPendingVotes(prev => {
+      // Update saved votes
+      setMyVotes(prev => new Map(prev).set(targetId, score))
+      // Remove from pending changes
+      setPendingChanges(prev => {
         const newMap = new Map(prev)
         newMap.delete(targetId)
         return newMap
@@ -136,6 +121,8 @@ export default function RatePage() {
   const displayedPlayers = hideRated 
     ? players.filter(p => !myVotes.has(p.user_id))
     : players
+  
+  const totalPendingCount = pendingChanges.size
 
   if (loading) {
     return <div className="text-white text-center">Loading players...</div>
@@ -143,9 +130,20 @@ export default function RatePage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="mb-6 flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Rate Players</h1>
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-2">
+          <h1 className="text-3xl font-bold text-white">Rate Players</h1>
+          {unratedCount < players.length && (
+            <Button
+              variant="outline"
+              onClick={() => setHideRated(!hideRated)}
+              className="text-white border-white/20 hover:bg-white/10"
+            >
+              {hideRated ? 'Show All' : 'Hide Rated'}
+            </Button>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
           <p className="text-white/70">
             {unratedCount > 0 ? (
               <>You have <Badge variant="destructive">{unratedCount} unrated</Badge> players</>
@@ -153,28 +151,26 @@ export default function RatePage() {
               <span className="text-green-400">✓ You've rated everyone!</span>
             )}
           </p>
+          {totalPendingCount > 0 && (
+            <Badge variant="default" className="bg-yellow-600">
+              {totalPendingCount} unsaved change{totalPendingCount !== 1 ? 's' : ''}
+            </Badge>
+          )}
         </div>
-        {unratedCount < players.length && (
-          <Button
-            variant="outline"
-            onClick={() => setHideRated(!hideRated)}
-            className="text-white border-white/20 hover:bg-white/10"
-          >
-            {hideRated ? 'Show All' : 'Hide Rated'}
-          </Button>
-        )}
       </div>
 
       <div className="grid gap-4">
         {displayedPlayers.map(player => {
-          const currentScore = myVotes.get(player.user_id)
-          const isPending = pendingVotes.has(player.user_id)
+          const savedScore = myVotes.get(player.user_id)
+          const pendingScore = pendingChanges.get(player.user_id)
+          const currentScore = pendingScore !== undefined ? pendingScore : savedScore
+          const hasUnsavedChanges = pendingChanges.has(player.user_id)
+          const isSaving = savingIds.has(player.user_id)
           const avatarUrl = getAvatarUrl(player)
-
           const displayName = player.custom_name || player.display_name || 'Unknown Player'
           
           return (
-            <Card key={player.user_id} className={!currentScore ? 'border-destructive/50' : ''}>
+            <Card key={player.user_id} className={!savedScore ? 'border-destructive/50' : ''}>
               <CardHeader>
                 <div className="flex items-center gap-4">
                   {avatarUrl ? (
@@ -184,17 +180,20 @@ export default function RatePage() {
                       className="w-12 h-12 rounded-full"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-xl">
+                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-xl text-white">
                       {displayName[0].toUpperCase()}
                     </div>
                   )}
                   <div className="flex-1">
                     <CardTitle className="flex items-center gap-2">
                       {displayName}
-                      {!currentScore && (
+                      {!savedScore && (
                         <Badge variant="destructive" className="text-xs">Please Rate</Badge>
                       )}
-                      {isPending && (
+                      {hasUnsavedChanges && !isSaving && (
+                        <Badge variant="default" className="text-xs bg-yellow-600">Unsaved</Badge>
+                      )}
+                      {isSaving && (
                         <Badge variant="secondary" className="text-xs">Saving...</Badge>
                       )}
                     </CardTitle>
@@ -208,19 +207,30 @@ export default function RatePage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Slider
                     min={1}
                     max={10}
                     step={1}
                     value={currentScore || 5}
                     onValueChange={(value) => handleVoteChange(player.user_id, value)}
+                    disabled={isSaving}
                   />
                   <div className="flex justify-between text-xs text-muted-foreground">
                     <span>1 - Beginner</span>
                     <span>5 - Average</span>
                     <span>10 - Pro</span>
                   </div>
+                  {hasUnsavedChanges && (
+                    <Button 
+                      onClick={() => saveVote(player.user_id, currentScore!)}
+                      disabled={isSaving}
+                      className="w-full"
+                      size="sm"
+                    >
+                      {isSaving ? 'Saving...' : 'Save Vote'}
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>

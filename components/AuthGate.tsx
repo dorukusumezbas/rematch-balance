@@ -107,6 +107,9 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 <a href="/profile" className="text-white/80 hover:text-white transition-colors">
                   Profile
                 </a>
+                <a href="/history" className="text-white/80 hover:text-white transition-colors">
+                  History
+                </a>
               </div>
             </div>
             <div className="flex items-center gap-4">
