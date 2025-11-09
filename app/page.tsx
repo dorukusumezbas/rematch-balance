@@ -13,7 +13,7 @@ export default function Home() {
         </p>
         
         <Card className="bg-slate-800/70 border-slate-700">
-          <CardContent className="py-6">
+          <CardContent className="p-6 pt-6">
             <h2 className="text-lg font-semibold text-white mb-3">🎮 How It Works</h2>
             <div className="grid md:grid-cols-3 gap-4 text-sm text-slate-200">
               <div>
