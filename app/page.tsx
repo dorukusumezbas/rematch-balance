@@ -37,6 +37,22 @@ export default function Home() {
         </CardContent>
       </Card>
 
+      <Card className="hover:shadow-lg transition-shadow">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            🗳️ All Votes
+          </CardTitle>
+          <CardDescription>
+            See the complete votes matrix - full transparency
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Link href="/votes">
+            <Button className="w-full" variant="outline">View Matrix</Button>
+          </Link>
+        </CardContent>
+      </Card>
+
       <Card className="hover:shadow-lg transition-shadow md:col-span-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
