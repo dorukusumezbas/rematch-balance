@@ -169,6 +169,7 @@ export default function BalancePage() {
   const resetAll = () => {
     setTeam1({ players: [] })
     setTeam2({ players: [] })
+    setAllPlayers(prev => prev.map(p => ({ ...p, is_online: false })))
     // availablePlayers will auto-sync via useEffect
   }
 
