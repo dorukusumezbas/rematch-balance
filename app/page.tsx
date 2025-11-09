@@ -12,20 +12,20 @@ export default function Home() {
           A community-driven player rating system for balanced and competitive matches
         </p>
         
-        <Card className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border-blue-500/30">
+        <Card className="bg-slate-800/70 border-slate-700">
           <CardContent className="py-6">
             <h2 className="text-lg font-semibold text-white mb-3">🎮 How It Works</h2>
-            <div className="grid md:grid-cols-3 gap-4 text-sm text-slate-300">
+            <div className="grid md:grid-cols-3 gap-4 text-sm text-slate-200">
               <div>
-                <span className="font-semibold text-blue-400">1. Rate Players</span>
+                <span className="font-semibold text-blue-300">1. Rate Players</span>
                 <p className="mt-1">Vote for your teammates on a scale of 1-10 based on their skill level</p>
               </div>
               <div>
-                <span className="font-semibold text-purple-400">2. View Rankings</span>
+                <span className="font-semibold text-purple-300">2. View Rankings</span>
                 <p className="mt-1">Check the scoreboard to see average ratings and player rankings</p>
               </div>
               <div>
-                <span className="font-semibold text-green-400">3. Balance Teams</span>
+                <span className="font-semibold text-green-300">3. Balance Teams</span>
                 <p className="mt-1">Use the team balancer to create fair and competitive matches</p>
               </div>
             </div>
