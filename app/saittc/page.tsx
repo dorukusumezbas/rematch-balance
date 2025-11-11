@@ -26,6 +26,7 @@ export default function SaitTCPage() {
   const [tcs, setTCs] = useState<TC[]>([])
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [saitAvatar, setSaitAvatar] = useState<string | null>(null)
   const [addingNew, setAddingNew] = useState(false)
   const [newTCName, setNewTCName] = useState('')
   const [newTCScore, setNewTCScore] = useState(5.0)
@@ -54,6 +55,15 @@ export default function SaitTCPage() {
       .single()
     
     setIsAdmin(playerData?.is_admin || false)
+
+    // Get Sait's avatar (display_name = "allmtd")
+    const { data: saitData } = await supabase
+      .from('players')
+      .select('avatar_url')
+      .eq('display_name', 'allmtd')
+      .single()
+    
+    setSaitAvatar(saitData?.avatar_url || null)
 
     // Load all TCs (shared list) sorted by score descending
     const { data, error } = await supabase
@@ -153,7 +163,16 @@ export default function SaitTCPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-2">🏠 Sait's TC Rankings</h1>
+        <div className="flex items-center gap-4 mb-2">
+          {saitAvatar && (
+            <img 
+              src={saitAvatar} 
+              alt="Sait" 
+              className="w-16 h-16 rounded-full border-2 border-purple-500"
+            />
+          )}
+          <h1 className="text-3xl font-bold text-white">🏠 Sait's TC Rankings</h1>
+        </div>
         <p className="text-white/70">
           Rank your town centers (houses you stay at) from best to worst
         </p>
