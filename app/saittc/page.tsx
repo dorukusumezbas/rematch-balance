@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge'
 
 type TC = {
   id: string
-  user_id: string
   tc_name: string
   score: number
   display_order: number
@@ -26,13 +25,13 @@ const TC_BADGES = [
 export default function SaitTCPage() {
   const [tcs, setTCs] = useState<TC[]>([])
   const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [addingNew, setAddingNew] = useState(false)
   const [newTCName, setNewTCName] = useState('')
   const [newTCScore, setNewTCScore] = useState(5.0)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editName, setEditName] = useState('')
   const [editScore, setEditScore] = useState(5.0)
-  const [draggedId, setDraggedId] = useState<string | null>(null)
 
   useEffect(() => {
     loadTCs()
@@ -47,11 +46,19 @@ export default function SaitTCPage() {
       return
     }
 
+    // Check if user is admin
+    const { data: playerData } = await supabase
+      .from('players')
+      .select('is_admin')
+      .eq('user_id', session.session.user.id)
+      .single()
+    
+    setIsAdmin(playerData?.is_admin || false)
+
+    // Load all TCs (shared list)
     const { data, error } = await supabase
       .from('sait_tcs')
       .select('*')
-      .eq('user_id', session.session.user.id)
-      .order('score', { ascending: false })
       .order('display_order')
 
     if (error) {
@@ -68,13 +75,14 @@ export default function SaitTCPage() {
       return
     }
 
-    const { data: session } = await supabase.auth.getSession()
-    if (!session.session?.user) return
+    if (!isAdmin) {
+      alert('Only admins can add TCs')
+      return
+    }
 
     const maxOrder = tcs.length > 0 ? Math.max(...tcs.map(tc => tc.display_order)) : 0
 
     const { error } = await supabase.from('sait_tcs').insert({
-      user_id: session.session.user.id,
       tc_name: newTCName.trim(),
       score: newTCScore,
       display_order: maxOrder + 1,
@@ -137,67 +145,45 @@ export default function SaitTCPage() {
     setEditScore(tc.score)
   }
 
-  // Drag and drop handlers
-  const handleDragStart = (e: React.DragEvent, tcId: string) => {
-    setDraggedId(tcId)
-    e.dataTransfer.effectAllowed = 'move'
-    e.dataTransfer.setData('text/plain', tcId)
-    
-    // Prevent text selection
-    window.getSelection()?.removeAllRanges()
-  }
+  // Promote/Demote handlers
+  const promote = async (index: number) => {
+    if (index === 0) return // Already at top
 
-  const handleDragEnd = () => {
-    setDraggedId(null)
-  }
+    const currentTC = tcs[index]
+    const previousTC = tcs[index - 1]
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.dataTransfer.dropEffect = 'move'
-  }
+    // Swap display_order
+    await supabase
+      .from('sait_tcs')
+      .update({ display_order: previousTC.display_order, updated_at: new Date().toISOString() })
+      .eq('id', currentTC.id)
 
-  const handleDrop = async (e: React.DragEvent, targetId: string) => {
-    e.preventDefault()
-    
-    if (!draggedId || draggedId === targetId) {
-      setDraggedId(null)
-      return
-    }
+    await supabase
+      .from('sait_tcs')
+      .update({ display_order: currentTC.display_order, updated_at: new Date().toISOString() })
+      .eq('id', previousTC.id)
 
-    const draggedIndex = tcs.findIndex(tc => tc.id === draggedId)
-    const targetIndex = tcs.findIndex(tc => tc.id === targetId)
-
-    if (draggedIndex === -1 || targetIndex === -1) {
-      setDraggedId(null)
-      return
-    }
-
-    // Reorder the array
-    const newTCs = [...tcs]
-    const [draggedTC] = newTCs.splice(draggedIndex, 1)
-    newTCs.splice(targetIndex, 0, draggedTC)
-
-    // Update display_order for all affected TCs
-    const updates = newTCs.map((tc, index) => ({
-      id: tc.id,
-      display_order: index,
-    }))
-
-    // Update in database
-    for (const update of updates) {
-      await supabase
-        .from('sait_tcs')
-        .update({ display_order: update.display_order, updated_at: new Date().toISOString() })
-        .eq('id', update.id)
-    }
-
-    setDraggedId(null)
     loadTCs()
   }
 
-  const handleMouseDown = () => {
-    // Clear any text selection when starting to drag
-    window.getSelection()?.removeAllRanges()
+  const demote = async (index: number) => {
+    if (index === tcs.length - 1) return // Already at bottom
+
+    const currentTC = tcs[index]
+    const nextTC = tcs[index + 1]
+
+    // Swap display_order
+    await supabase
+      .from('sait_tcs')
+      .update({ display_order: nextTC.display_order, updated_at: new Date().toISOString() })
+      .eq('id', currentTC.id)
+
+    await supabase
+      .from('sait_tcs')
+      .update({ display_order: currentTC.display_order, updated_at: new Date().toISOString() })
+      .eq('id', nextTC.id)
+
+    loadTCs()
   }
 
   if (loading) {
@@ -215,8 +201,8 @@ export default function SaitTCPage() {
         </p>
       </div>
 
-      {/* Add New TC */}
-      {!addingNew ? (
+      {/* Add New TC - Only for admins */}
+      {isAdmin && !addingNew ? (
         <Card className="mb-6 bg-slate-800/50 border-slate-700">
           <CardContent className="p-6 pt-6">
             <AppButton onClick={() => setAddingNew(true)} variant="primary" fullWidth>
@@ -224,7 +210,7 @@ export default function SaitTCPage() {
             </AppButton>
           </CardContent>
         </Card>
-      ) : (
+      ) : isAdmin && addingNew ? (
         <Card className="mb-6 bg-slate-800/50 border-slate-700">
           <CardHeader>
             <CardTitle className="text-white">Add New Town Center</CardTitle>
@@ -284,16 +270,7 @@ export default function SaitTCPage() {
           {tcs.map((tc, index) => (
             <Card
               key={tc.id}
-              draggable={editingId !== tc.id}
-              onDragStart={(e) => handleDragStart(e, tc.id)}
-              onDragEnd={handleDragEnd}
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, tc.id)}
-              onMouseDown={handleMouseDown}
-              className={`bg-slate-800/50 border-slate-700 transition-all ${
-                draggedId === tc.id ? 'opacity-50' : ''
-              } ${editingId !== tc.id ? 'cursor-move select-none' : ''}`}
-              style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
+              className="bg-slate-800/50 border-slate-700"
             >
               <CardContent className="p-6 pt-6">
                 {editingId === tc.id ? (
@@ -356,14 +333,32 @@ export default function SaitTCPage() {
                         </Badge>
                       </div>
                     </div>
-                    <div className="flex gap-2 ml-4">
-                      <AppButton onClick={() => startEdit(tc)} variant="secondary" size="sm">
-                        Edit
-                      </AppButton>
-                      <AppButton onClick={() => deleteTC(tc.id)} variant="danger" size="sm">
-                        Delete
-                      </AppButton>
-                    </div>
+                    {isAdmin && (
+                      <div className="flex gap-2 ml-4">
+                        <AppButton 
+                          onClick={() => promote(index)} 
+                          variant="secondary" 
+                          size="sm"
+                          disabled={index === 0}
+                        >
+                          ↑
+                        </AppButton>
+                        <AppButton 
+                          onClick={() => demote(index)} 
+                          variant="secondary" 
+                          size="sm"
+                          disabled={index === tcs.length - 1}
+                        >
+                          ↓
+                        </AppButton>
+                        <AppButton onClick={() => startEdit(tc)} variant="secondary" size="sm">
+                          Edit
+                        </AppButton>
+                        <AppButton onClick={() => deleteTC(tc.id)} variant="danger" size="sm">
+                          Delete
+                        </AppButton>
+                      </div>
+                    )}
                   </div>
                 )}
               </CardContent>
@@ -377,7 +372,9 @@ export default function SaitTCPage() {
         <Card className="mt-6 bg-slate-800/50 border-slate-700">
           <CardContent className="p-4">
             <p className="text-white/60 text-sm text-center">
-              💡 Tip: Drag and drop to reorder TCs. They're automatically sorted by score, but you can manually adjust the order!
+              {isAdmin 
+                ? "💡 Tip: Use ↑ and ↓ buttons to reorder TCs!"
+                : "👀 View-only: This is Sait's shared TC ranking list!"}
             </p>
           </CardContent>
         </Card>

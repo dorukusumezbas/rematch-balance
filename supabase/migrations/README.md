@@ -24,6 +24,7 @@ This folder contains all database schema changes in chronological order.
 | 009 | `009_exclude_non_rematch_voters.sql` | Exclude non-rematch players' votes from average calculations | ⏳       |
 | 010 | `010_fix_vote_history_rls.sql`    | Fix RLS policy to allow reading all vote history (not just own) | ⏳       |
 | 011 | `011_create_sait_tcs.sql`         | Create sait_tcs table for TC (Town Center) ranking feature | ⏳       |
+| 012 | `012_make_sait_tcs_shared.sql`    | Make sait_tcs a shared list (remove user_id, only admins can edit) | ⏳       |
 
 ## Creating New Migrations
 
