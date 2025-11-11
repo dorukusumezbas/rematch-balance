@@ -202,7 +202,7 @@ export default function SaitTCPage() {
       </div>
 
       {/* Add New TC - Only for admins */}
-      {isAdmin && !addingNew ? (
+      {isAdmin && !addingNew && (
         <Card className="mb-6 bg-slate-800/50 border-slate-700">
           <CardContent className="p-6 pt-6">
             <AppButton onClick={() => setAddingNew(true)} variant="primary" fullWidth>
@@ -210,7 +210,9 @@ export default function SaitTCPage() {
             </AppButton>
           </CardContent>
         </Card>
-      ) : isAdmin && addingNew ? (
+      )}
+      
+      {isAdmin && addingNew && (
         <Card className="mb-6 bg-slate-800/50 border-slate-700">
           <CardHeader>
             <CardTitle className="text-white">Add New Town Center</CardTitle>
