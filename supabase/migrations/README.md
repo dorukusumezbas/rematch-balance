@@ -23,6 +23,7 @@ This folder contains all database schema changes in chronological order.
 | 008 | `008_allow_zero_scores.sql`       | Allow 0 as a valid score (0.0-10.0 range instead of 1.0-10.0) | ⏳       |
 | 009 | `009_exclude_non_rematch_voters.sql` | Exclude non-rematch players' votes from average calculations | ⏳       |
 | 010 | `010_fix_vote_history_rls.sql`    | Fix RLS policy to allow reading all vote history (not just own) | ⏳       |
+| 011 | `011_create_sait_tcs.sql`         | Create sait_tcs table for TC (Town Center) ranking feature | ⏳       |
 
 ## Creating New Migrations
 

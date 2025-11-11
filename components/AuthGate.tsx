@@ -141,6 +141,12 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                   History
                 </Link>
                 
+                {/* Fun Group */}
+                <div className="h-4 w-px bg-white/20"></div>
+                <Link href="/saittc" className={`transition-colors ${pathname === '/saittc' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
+                  Sait's TCs
+                </Link>
+                
                 {/* Personal Group */}
                 <div className="h-4 w-px bg-white/20"></div>
                 <Link href="/profile" className={`transition-colors ${pathname === '/profile' ? 'text-white font-semibold border-b-2 border-white' : 'text-white/80 hover:text-white'}`}>
