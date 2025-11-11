@@ -55,11 +55,11 @@ export default function SaitTCPage() {
     
     setIsAdmin(playerData?.is_admin || false)
 
-    // Load all TCs (shared list)
+    // Load all TCs (shared list) sorted by score descending
     const { data, error } = await supabase
       .from('sait_tcs')
       .select('*')
-      .order('display_order')
+      .order('score', { ascending: false })
 
     if (error) {
       console.error('Error loading TCs:', error)
@@ -80,12 +80,10 @@ export default function SaitTCPage() {
       return
     }
 
-    const maxOrder = tcs.length > 0 ? Math.max(...tcs.map(tc => tc.display_order)) : 0
-
     const { error } = await supabase.from('sait_tcs').insert({
       tc_name: newTCName.trim(),
       score: newTCScore,
-      display_order: maxOrder + 1,
+      display_order: 0, // Not used for sorting anymore, but required by schema
     })
 
     if (error) {
@@ -145,46 +143,6 @@ export default function SaitTCPage() {
     setEditScore(tc.score)
   }
 
-  // Promote/Demote handlers
-  const promote = async (index: number) => {
-    if (index === 0) return // Already at top
-
-    const currentTC = tcs[index]
-    const previousTC = tcs[index - 1]
-
-    // Swap display_order
-    await supabase
-      .from('sait_tcs')
-      .update({ display_order: previousTC.display_order, updated_at: new Date().toISOString() })
-      .eq('id', currentTC.id)
-
-    await supabase
-      .from('sait_tcs')
-      .update({ display_order: currentTC.display_order, updated_at: new Date().toISOString() })
-      .eq('id', previousTC.id)
-
-    loadTCs()
-  }
-
-  const demote = async (index: number) => {
-    if (index === tcs.length - 1) return // Already at bottom
-
-    const currentTC = tcs[index]
-    const nextTC = tcs[index + 1]
-
-    // Swap display_order
-    await supabase
-      .from('sait_tcs')
-      .update({ display_order: nextTC.display_order, updated_at: new Date().toISOString() })
-      .eq('id', currentTC.id)
-
-    await supabase
-      .from('sait_tcs')
-      .update({ display_order: currentTC.display_order, updated_at: new Date().toISOString() })
-      .eq('id', nextTC.id)
-
-    loadTCs()
-  }
 
   if (loading) {
     return (
@@ -337,22 +295,6 @@ export default function SaitTCPage() {
                     </div>
                     {isAdmin && (
                       <div className="flex gap-2 ml-4">
-                        <AppButton 
-                          onClick={() => promote(index)} 
-                          variant="secondary" 
-                          size="sm"
-                          disabled={index === 0}
-                        >
-                          ↑
-                        </AppButton>
-                        <AppButton 
-                          onClick={() => demote(index)} 
-                          variant="secondary" 
-                          size="sm"
-                          disabled={index === tcs.length - 1}
-                        >
-                          ↓
-                        </AppButton>
                         <AppButton onClick={() => startEdit(tc)} variant="secondary" size="sm">
                           Edit
                         </AppButton>
@@ -375,8 +317,8 @@ export default function SaitTCPage() {
           <CardContent className="p-4">
             <p className="text-white/60 text-sm text-center">
               {isAdmin 
-                ? "💡 Tip: Use ↑ and ↓ buttons to reorder TCs!"
-                : "👀 View-only: This is Sait's shared TC ranking list!"}
+                ? "💡 Tip: TCs are automatically sorted by score (highest first). Edit scores to change the ranking!"
+                : "👀 View-only: This is Sait's shared TC ranking list, sorted by score!"}
             </p>
           </CardContent>
         </Card>
